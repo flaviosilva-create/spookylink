@@ -6,7 +6,7 @@ SpookyLink is an independent, mobile-first Halloween invitation builder and brow
 
 - Responsive English landing page and pricing for one-time digital purchases.
 - Live invitation editor with event title, host, date, time, location, custom message, and three visual themes.
-- Copy/share invitation text and PNG export of the invitation artwork.
+- Copy/share invitation text, generate unique invitation URLs that prefill the editor, and export PNG artwork.
 - A four-clue interactive browser mystery game.
 - Paddle.js checkout wiring for three products: Invitation (US$9.99), Haunted Mystery (US$4.99), and bundle (US$12.99).
 - Terms & Conditions, Privacy Policy, Refund Policy, and Contact & Support pages.
