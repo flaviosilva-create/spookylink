@@ -1,63 +1,92 @@
-# Paddle setup and domain-review checklist
+# SpookyLink — Paddle setup and website review
 
-This guide is for the SpookyLink GitHub Pages site:
-https://flaviosilva-create.github.io/spookylink/
+Public website: https://flaviosilva-create.github.io/spookylink/
 
-## 1. Complete the website before applying
+This repository is already prepared with the invitation builder, shareable invitation URLs, PNG export, a four-clue browser mystery, legal pages, Paddle.js integration, and a server-side transaction verification Worker. The provider account, product IDs, secrets, and Worker deployment must be completed in your own accounts; code cannot create or approve those credentials.
 
-- Replace `REPLACE_WITH_REAL_SUPPORT_EMAIL` and `REPLACE_WITH_REAL_SUPPORT_PHONE` in `contact.html` with real support details you can monitor.
-- Confirm the business/sole-proprietor information you enter in Paddle is accurate. Paddle prefers the legal name for a sole proprietor when appropriate; the public-facing brand is SpookyLink.
-- Review every page linked in the homepage footer: Terms, Privacy, Refunds, and Contact.
-- The refund policy currently offers a 30-day request window. Keep this promise only if you are willing to honor it and can handle requests through Paddle.
-- Verify product descriptions and images accurately represent what buyers receive: a downloadable PNG invitation, a playable four-riddle browser game, or both.
-- Do not claim that SpookyLink stores hosted invitation pages, manages RSVPs, saves guest lists, or provides multiplayer synchronization; those features are not part of this version. Shareable URLs encode the invitation details in the URL itself and are not encrypted or stored in a SpookyLink database.
+## 1. Review the public website
 
-Paddle says the domain review looks for a clear product description, prices and deliverables, Terms & Conditions, Refund Policy, Privacy Policy, seller/brand name, and a live HTTPS website. It may request extra evidence of product ownership or additional information.
+Before submitting the domain to Paddle, open these pages on the published HTTPS site and check that each loads:
 
-## 2. Create products and prices in Paddle
+- Home/pricing: https://flaviosilva-create.github.io/spookylink/
+- Terms: https://flaviosilva-create.github.io/spookylink/terms.html
+- Privacy: https://flaviosilva-create.github.io/spookylink/privacy.html
+- Refunds: https://flaviosilva-create.github.io/spookylink/refunds.html
+- Contact: https://flaviosilva-create.github.io/spookylink/contact.html
 
-Create three one-time products/prices in your own Paddle account:
+Paddle's website review asks for a clear product description, prices, clear deliverables, Terms & Conditions, Refund Policy, Privacy Policy, brand/legal name information, and a live HTTPS domain. Paddle may request more information. Its approval is not guaranteed.
 
-| Product | Base price | Checkout plan key |
+Product deliverables currently are:
+- Invitation — live editor, shareable URL carrying invitation details, and paid high-resolution PNG download.
+- Haunted Mystery — one browser-based game with four riddles.
+- Full Experience — both paid features.
+- This version does not store invitations in a database and does not offer server-stored invitation pages, RSVP tracking, guest lists, customer accounts, cloud saves, or multiplayer synchronization.
+
+The refund page promises a 30-day request window. Keep that promise only if you are prepared to honor it through the applicable Paddle process. Make sure the seller/business details you provide to Paddle are accurate.
+
+## 2. Create prices in Paddle
+
+In your own Paddle account, create three **one-time** products/prices in USD:
+
+| Product | Price | Price key in code |
 |---|---:|---|
-| SpookyLink Invitation | USD 9.99 | `invitation` |
-| SpookyLink Haunted Mystery | USD 4.99 | `mystery` |
-| SpookyLink Full Experience Bundle | USD 12.99 | `bundle` |
+| SpookyLink Invitation | $9.99 | `invitation` |
+| SpookyLink Haunted Mystery | $4.99 | `mystery` |
+| SpookyLink Full Experience Bundle | $12.99 | `bundle` |
 
-Copy each **price ID** beginning with `pri_`. Do not use a product ID beginning with `pro_` in the price fields. Choose the product/tax category that accurately represents the deliverable and follow any category-approval prompts in the Paddle dashboard.
+Copy the corresponding **price IDs**, which start with `pri_`. Sandbox and live price IDs are different. Select the product/tax category that accurately describes these digital deliverables.
 
-## 3. Configure sandbox first
+## 3. Deploy the server-side verification Worker
 
-1. Open the Paddle sandbox workspace and create a client-side token under **My account → Settings → Authentication → Client-side tokens**. It begins with `test_`.
-2. Open `paddle-config.js` in the GitHub repository and replace:
-   - `test_REPLACE_WITH_PADDLE_CLIENT_SIDE_TOKEN` with the sandbox client-side token.
-   - The three `pri_REPLACE_...` values with the matching sandbox price IDs.
-3. Keep `environment: "sandbox"`.
-4. In Paddle's Checkout settings, configure a default payment link. Use your published HTTPS site URL where the dashboard allows this.
-5. Commit the changes to the `main` branch and wait for GitHub Pages to publish them.
-6. Test checkout with Paddle's sandbox test card documented in its developer quickstart. No real money should move in sandbox.
+Follow `worker/README.md`. In summary:
+1. Create a Cloudflare Worker named `spookylink-paddle-verification`.
+2. Deploy the code from `worker/src/index.js`.
+3. Add Worker variables `PADDLE_ENVIRONMENT=sandbox`, `ALLOWED_ORIGIN=https://flaviosilva-create.github.io`, and the three sandbox IDs `PRICE_INVITATION`, `PRICE_MYSTERY`, and `PRICE_BUNDLE`.
+4. Store the sandbox Paddle API key as the encrypted Worker secret `PADDLE_API_KEY`. Never put it in GitHub or the website.
+5. Open the Worker URL plus `/api/health` and confirm it responds with `{"ok":true,...}`.
 
-The client-side token is meant to be public. **Never put a Paddle API key or webhook secret in `paddle-config.js`, `index.html`, or any public GitHub file.**
+The Worker uses the Paddle API server-side to check the transaction status and product price IDs. Checkout stays disabled when the Worker URL is still a placeholder.
 
-## 4. Website approval and production
+## 4. Configure the public Paddle.js settings
 
-1. Check that every link works from the public site over HTTPS, especially all footer legal links.
-2. Confirm the site has no broken links, missing images, browser-console errors, or misleading product claims. Test a narrow mobile screen and a desktop browser.
-3. Submit the domain under Paddle dashboard **My account → Settings → Website approval**.
-4. Complete Paddle identity and payout verification in your account. Approval is decided by Paddle; publishing website code cannot guarantee approval.
-5. Only after Paddle approves the account and domain, create/use the live client-side token beginning with `live_` and the live price IDs. Set `environment: "production"` in `paddle-config.js`.
-6. Repeat checkout tests and confirm transactions appear in the correct live workspace before advertising paid purchases.
+Edit `paddle-config.js` on GitHub:
 
-## 5. Important current limitation: fulfillment is browser-side
+- `environment`: keep `sandbox` for tests.
+- `token`: replace the placeholder with your Paddle **sandbox client-side token**, starting with `test_`.
+- `apiBaseUrl`: set to the base URL of your deployed Cloudflare Worker, for example `https://spookylink-paddle-verification.YOUR-SUBDOMAIN.workers.dev`. Do not append the `/api/verify-transaction` path.
+- `prices.invitation`, `prices.mystery`, `prices.bundle`: enter the matching sandbox `pri_` IDs.
 
-This GitHub Pages version listens for Paddle.js `checkout.completed`, then writes an unlock marker into browser local storage. It does not verify the transaction on your own server. Local storage is editable, and a purchase marker will not automatically follow a customer to a different browser or device. For an initial review/testing flow, this lets you verify the frontend wiring, but it is **not secure, durable production fulfillment**.
+A Paddle client-side token is designed to be public. A Paddle API key or a notification/webhook secret is not public and must never be placed in this file.
 
-Before significant real sales, add a backend/serverless endpoint that receives Paddle notifications, verifies the `Paddle-Signature` using the endpoint secret, checks the transaction status/items on the server, and records entitlements durably. GitHub Pages alone cannot run this backend. Do not claim server-verified fulfillment until that backend exists and has been tested.
+## 5. Configure Paddle Checkout and test
 
-## Official docs
+1. In the Paddle **sandbox** dashboard, set Checkout's default payment link to the SpookyLink HTTPS URL. Paddle documents that a default payment link is required to open checkout.
+2. Wait for GitHub Pages to publish the config changes.
+3. Open the website on both desktop and mobile. Agree to the Terms/Refund consent checkbox and test all three products using Paddle's sandbox test card from the official quickstart. No real money should move during sandbox tests.
+4. Confirm each completed test payment appears in the sandbox dashboard and that the browser unlocks the correct feature only after the Worker verifies the transaction.
+5. Reload the page and confirm saved transaction references are re-verified. Test invalid transaction IDs and incomplete transactions; they must not unlock anything.
+6. Check the browser console and Worker logs if a checkout or verification request fails.
 
-- Paddle quickstart: https://developer.paddle.com/get-started/quickstart/
-- Client-side tokens: https://developer.paddle.com/paddle-js/about/client-side-tokens/
-- Domain review: https://www.paddle.com/help/start/account-verification/what-is-domain-verification
-- Acceptable Use Policy: https://www.paddle.com/help/start/intro-to-paddle/what-am-i-not-allowed-to-sell-on-paddle
-- Webhook signature verification: https://developer.paddle.com/webhooks/about/signature-verification/
+## 6. Submit website review and switch to live only after approval
+
+1. Submit `https://flaviosilva-create.github.io/spookylink/` under Paddle's **Website approval** flow.
+2. Complete the identity/business and payout verification in your Paddle account.
+3. Wait for explicit approval of the business/account and domain.
+4. Create the three live product prices and a live client-side token starting with `live_`.
+5. Update `paddle-config.js` to `environment: "production"`, the live token, live price IDs, and the Worker URL.
+6. In Cloudflare, change `PADDLE_ENVIRONMENT` to `production`, set the live IDs, and replace the Worker secret with the live Paddle API key. Never mix sandbox and live credentials.
+7. Set a live default payment link and repeat the checkout path carefully before advertising or sending customers to it.
+
+## Fulfillment and limitations
+
+The frontend does not unlock a feature solely because Paddle.js reports a checkout event. It records the transaction reference and asks the Worker to verify it against Paddle's transaction API. The Worker only returns features for a completed transaction containing one of the configured price IDs.
+
+This is a first production-oriented integration, not a complete commerce platform: there are no customer accounts or database-backed entitlements, so access restoration on another device is limited unless the user retains the transaction reference. A full webhook-driven refund/dispute ledger and durable purchase database are recommended before scaling. Do not describe features that are not implemented as included in the product.
+
+## Official Paddle documentation
+
+- [Quickstart and sandbox test card](https://developer.paddle.com/get-started/quickstart/)
+- [Build an overlay checkout](https://developer.paddle.com/build/checkout/build-overlay-checkout/)
+- [Default payment link](https://developer.paddle.com/build/transactions/default-payment-link/)
+- [Get a transaction](https://developer.paddle.com/api-reference/transactions/get-transaction/)
+- [Website/domain review requirements](https://www.paddle.com/help/start/account-verification/what-is-domain-verification)
