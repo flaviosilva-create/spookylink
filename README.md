@@ -13,7 +13,7 @@ SpookyLink is an independent, mobile-first Halloween invitation builder and brow
 
 ## Required setup before review or real sales
 
-1. Replace the contact placeholders in `contact.html` with a real support email and phone number. Do not submit the domain while those placeholders remain.
+1. Review `contact.html`. It provides Paddle buyer support for billing and GitHub Issues for technical reports. Paddle may request an operator-controlled support email or phone during verification; add a real contact channel if required by your seller onboarding.
 2. Create the three one-time products/prices in Paddle and set their IDs and your **client-side token** in `paddle-config.js`.
 3. Test with a Paddle sandbox token and sandbox price IDs first.
 4. Configure a default payment link in Paddle Checkout settings and test the overlay on desktop and mobile.
