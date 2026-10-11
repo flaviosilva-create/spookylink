@@ -58,21 +58,28 @@ async function verifyTransaction(transactionId, env) {
   if (!transaction || transaction.id !== transactionId) return { error: "transaction_not_found", status: 404 };
   if (transaction.status !== "completed") return { error: "payment_not_completed", status: 402 };
 
-  // Paddle transaction line_items include a price_id. Only configured SpookyLink prices unlock content.
-  const lineItems = Array.isArray(transaction.line_items) ? transaction.line_items : [];
+  // Paddle API versions expose calculated line items under details.line_items.
+  // Also accept a top-level line_items array or the items[].price.id form.
+  const lineItems = Array.isArray(transaction.details?.line_items)
+    ? transaction.details.line_items
+    : Array.isArray(transaction.line_items)
+      ? transaction.line_items
+      : Array.isArray(transaction.items)
+        ? transaction.items.map(item => ({ price_id: item?.price?.id || item?.price_id }))
+        : [];
   const products = new Set();
   for (const item of lineItems) {
-    const price = item && item.price_id;
+    const price = item && (item.price_id || item.price?.id);
     if (price && allowedPrices[price]) {
       for (const product of allowedPrices[price]) products.add(product);
     }
   }
   if (!products.size) return { error: "transaction_has_no_spookylink_items", status: 403 };
 
-  // Fail closed if this transaction has recorded adjustments. Refund-aware durable
-  // entitlements should use webhooks and a database before scaling real sales.
-  const adjustments = transaction.adjustments;
-  if (Array.isArray(adjustments) && adjustments.some(x => x && ["approved", "pending_approval"].includes(x.status) && x.action === "refund")) {
+  // Fail closed when an approved/pending refund or chargeback exists.
+  // A durable webhook-driven ledger is recommended before scaling real sales.
+  const adjustments = Array.isArray(transaction.adjustments) ? transaction.adjustments : [];
+  if (adjustments.some(x => x && ["approved", "pending_approval"].includes(x.status) && ["refund", "chargeback"].includes(x.action))) {
     return { error: "transaction_adjustment_pending_or_approved", status: 403 };
   }
   return { products: [...products], transactionId: transaction.id, status: transaction.status };
