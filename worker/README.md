@@ -19,6 +19,16 @@ This Worker verifies completed Paddle transactions using Paddle's server-side AP
 8. Open `https://YOUR-WORKER-URL/api/health`. A correctly deployed Worker responds with JSON showing `ok: true`.
 9. Keep the Paddle environment, API key, and all three price IDs within the same mode (sandbox with sandbox; production with live).
 
+## Run the Worker tests
+
+With Node.js 18 or newer installed, from this `worker` directory run:
+
+```bash
+npm test
+```
+
+The tests use Node's built-in test runner and mock Paddle API responses, so they do not require real Paddle credentials or make real API calls.
+
 ## How verification works
 
 After Paddle emits `checkout.completed`, the browser reads the related transaction ID and sends it to `POST /api/verify-transaction`. The Worker calls Paddle's transaction API from the server, requires a `completed` transaction, and only returns entitlement keys if the transaction contains one of the three configured SpookyLink price IDs. On page load, saved transaction references are rechecked with the server before paid features unlock.
