@@ -21,11 +21,13 @@ SpookyLink is an independent, mobile-first Halloween invitation builder and brow
 6. Switch to a live token and live price IDs only after Paddle approves the account and domain.
 7. Read `PADDLE_SETUP.md` for the full sequence and limitations.
 
-## Important security and fulfillment limitation
+## Security and fulfillment
 
-GitHub Pages is static hosting. This version unlocks digital features in the browser after Paddle.js emits `checkout.completed` and stores the entitlement marker in local storage. That makes the prototype testable without exposing secrets, but **it is not server-verified purchase fulfillment**: a browser user can alter local storage, and purchases do not automatically follow the customer to another device. Before treating this as a robust production commerce system, add a server-side endpoint/webhook that verifies Paddle's signature and transaction status, and a durable purchase record. Never put Paddle API keys or webhook secrets in this public repository.
+GitHub Pages hosts the public frontend. The repository also includes a Cloudflare Worker at `worker/src/index.js` that checks transaction IDs with the server-side Paddle API before paid features unlock. Deploy the Worker and set the encrypted `PADDLE_API_KEY` plus the three matching price IDs before enabling checkout. Deployment steps are in `worker/README.md`.
 
-Only the Paddle client-side token (not an API key) is designed for frontend use. The token and price IDs are intentionally placeholders until you create them in your own Paddle account.
+The frontend configuration in `paddle-config.js` intentionally contains placeholders. Checkout fails closed until the Paddle token, three price IDs, and Worker URL are configured. Never put Paddle API keys or webhook secrets in the public repository.
+
+This starter Worker verifies current transaction status and configured price IDs, but doesn't yet provide customer accounts, a durable entitlement database, or a complete webhook-driven refund ledger. For a larger launch, add Paddle webhooks and idempotent database records, plus a customer purchase restoration/support process.
 
 ## Local preview
 
