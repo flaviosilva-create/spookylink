@@ -1,0 +1,29 @@
+name: Test Paddle verification Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "worker/**"
+      - ".github/workflows/test-worker.yml"
+  pull_request:
+    paths:
+      - "worker/**"
+      - ".github/workflows/test-worker.yml"
+  workflow_dispatch:
+
+jobs:
+  worker-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run verification tests
+        run: npm test
