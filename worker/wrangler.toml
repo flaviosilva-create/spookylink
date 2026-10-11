@@ -1,0 +1,13 @@
+name = "spookylink-paddle-verification"
+main = "src/index.js"
+compatibility_date = "2026-10-11"
+workers_dev = true
+
+# Set these as Worker variables in Cloudflare, not in this file for live credentials.
+[vars]
+PADDLE_ENVIRONMENT = "sandbox"
+ALLOWED_ORIGIN = "https://flaviosilva-create.github.io"
+
+# Add the following as encrypted Worker secrets (Dashboard > Settings > Variables and Secrets):
+# PADDLE_API_KEY
+# Do not commit API keys or webhook secrets.
