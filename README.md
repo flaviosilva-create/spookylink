@@ -1,28 +1,39 @@
 # SpookyLink
 
-A standalone, mobile-first Halloween invitation prototype for the US market.
+SpookyLink is an independent, mobile-first Halloween invitation builder and browser-based riddle game for the US market.
 
-## Current prototype
+## Current implementation
 
-- Responsive landing page and product concept
-- Live invitation editor with party title, host, date, time, location, message, and three visual themes
-- Copy invitation text, share where supported, and export the preview as a PNG where browser support allows
-- Planned product pricing: Invitation $9.99, Haunted Mystery add-on $4.99, bundle $12.99
+- Responsive English landing page and pricing for one-time digital purchases.
+- Live invitation editor with event title, host, date, time, location, custom message, and three visual themes.
+- Copy/share invitation text and PNG export of the invitation artwork.
+- A four-clue interactive browser mystery game.
+- Paddle.js checkout wiring for three products: Invitation (US$9.99), Haunted Mystery (US$4.99), and bundle (US$12.99).
+- Terms & Conditions, Privacy Policy, Refund Policy, and Contact & Support pages.
 
-## Important launch status
+## Required setup before review or real sales
 
-This is an early front-end prototype. **Payments, permanent hosted invitation links, RSVP storage, accounts, and the Haunted Mystery game are not implemented yet.** Pricing buttons are intentionally informational and do not charge users. Do not advertise this as a finished paid service until checkout and delivery are built and tested.
+1. Replace the contact placeholders in `contact.html` with a real support email and phone number. Do not submit the domain while those placeholders remain.
+2. Create the three one-time products/prices in Paddle and set their IDs and your **client-side token** in `paddle-config.js`.
+3. Test with a Paddle sandbox token and sandbox price IDs first.
+4. Configure a default payment link in Paddle Checkout settings and test the overlay on desktop and mobile.
+5. Submit the HTTPS GitHub Pages domain for Paddle website approval.
+6. Switch to a live token and live price IDs only after Paddle approves the account and domain.
+7. Read `PADDLE_SETUP.md` for the full sequence and limitations.
 
-## Run locally
+## Important security and fulfillment limitation
 
-Open `index.html` in a modern browser. The optional invitation image export loads html2canvas from a CDN.
+GitHub Pages is static hosting. This version unlocks digital features in the browser after Paddle.js emits `checkout.completed` and stores the entitlement marker in local storage. That makes the prototype testable without exposing secrets, but **it is not server-verified purchase fulfillment**: a browser user can alter local storage, and purchases do not automatically follow the customer to another device. Before treating this as a robust production commerce system, add a server-side endpoint/webhook that verifies Paddle's signature and transaction status, and a durable purchase record. Never put Paddle API keys or webhook secrets in this public repository.
 
-## Publish with GitHub Pages
+Only the Paddle client-side token (not an API key) is designed for frontend use. The token and price IDs are intentionally placeholders until you create them in your own Paddle account.
 
-1. Open the repository's **Settings** tab.
-2. Select **Pages** in the left sidebar.
-3. Under **Build and deployment**, choose **Deploy from a branch**.
-4. Select branch `main` and folder `/ (root)`, then save.
-5. Wait for GitHub Pages to publish the site; the Pages screen will show the exact public URL.
+## Local preview
 
-SpookyLink is an independent project and is not part of Lovena.
+Open `index.html` in a modern browser. PNG export loads html2canvas from a CDN. Paddle checkout requires valid configuration and internet access.
+
+## GitHub Pages
+
+Repository settings should publish branch `main`, folder `/(root)`. Public site:
+https://flaviosilva-create.github.io/spookylink/
+
+SpookyLink is independent and is not part of Lovena.
