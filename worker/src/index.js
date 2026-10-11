@@ -79,7 +79,10 @@ async function verifyTransaction(transactionId, env) {
   // Fail closed when an approved/pending refund or chargeback exists.
   // A durable webhook-driven ledger is recommended before scaling real sales.
   const adjustments = Array.isArray(transaction.adjustments) ? transaction.adjustments : [];
-  if (adjustments.some(x => x && ["approved", "pending_approval"].includes(x.status) && ["refund", "chargeback"].includes(x.action))) {
+  if (adjustments.some(x => x && (
+    (["approved", "pending_approval"].includes(x.status) && ["credit", "refund", "chargeback", "chargeback_warning"].includes(x.action)) ||
+    ["chargeback", "chargeback_warning"].includes(x.action)
+  ))) {
     return { error: "transaction_adjustment_pending_or_approved", status: 403 };
   }
   return { products: [...products], transactionId: transaction.id, status: transaction.status };
