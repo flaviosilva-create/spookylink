@@ -10,7 +10,7 @@ https://flaviosilva-create.github.io/spookylink/
 - Review every page linked in the homepage footer: Terms, Privacy, Refunds, and Contact.
 - The refund policy currently offers a 30-day request window. Keep this promise only if you are willing to honor it and can handle requests through Paddle.
 - Verify product descriptions and images accurately represent what buyers receive: a downloadable PNG invitation, a playable four-riddle browser game, or both.
-- Do not claim that SpookyLink creates hosted invitation URLs, manages RSVPs, saves guest lists, or provides multiplayer synchronization; those features are not part of this version.
+- Do not claim that SpookyLink stores hosted invitation pages, manages RSVPs, saves guest lists, or provides multiplayer synchronization; those features are not part of this version. Shareable URLs encode the invitation details in the URL itself and are not encrypted or stored in a SpookyLink database.
 
 Paddle says the domain review looks for a clear product description, prices and deliverables, Terms & Conditions, Refund Policy, Privacy Policy, seller/brand name, and a live HTTPS website. It may request extra evidence of product ownership or additional information.
 
