@@ -77,9 +77,18 @@
 </main>
 <footer class="footer"><div class="wrap footer-inner"><a class="brand" href="#"><span class="brandmark">✦</span> spooky<span style="color:var(--orange);margin-left:-10px">link</span></a><span>Made for Halloween nights and stories worth sharing.</span><nav class="legal-links" aria-label="Legal"><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a><a href="refunds.html">Refunds</a><a href="contact.html">Contact</a></nav><span>© 2026 SpookyLink · Independent digital project</span></div></footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="./paddle-config.js"></script>
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <script>
 (function(){
-const $=id=>document.getElementById(id);let theme='haunted';let toastTimer;
+const $=id=>document.getElementById(id);let theme='haunted';let toastTimer;let pendingPlan=null;let gameIndex=0;let gameSolved=false;
+const paddleConfig=window.SPOOKYLINK_PADDLE_CONFIG||{};
+const gameQuestions=[
+{title:"The Clockmaker’s Riddle",story:"I have a face and two hands, but no arms or legs. I mark the hours in the haunted manor. What am I?",answers:["A portrait","A clock","A ghost"],correct:1,hint:"Listen for the ticking in the tower."},
+{title:"Footsteps in the Fog",story:"The more you take, the more you leave behind. The groundskeeper followed them through the graveyard. What are they?",answers:["Candles","Footsteps","Coins"],correct:1,hint:"You leave them as you walk."},
+{title:"The Silent Keys",story:"I have keys but no locks, space but no room, and you can enter but never go inside. What am I?",answers:["A keyboard","A piano bench","A secret door"],correct:0,hint:"It helps you type a message."},
+{title:"The Final Seal",story:"I can travel around the world while staying in one corner. The last clue is waiting on an envelope. What am I?",answers:["A spider","A stamp","A map"],correct:1,hint:"Look at the corner of a letter."}
+];
 const themes={haunted:{bg:'radial-gradient(ellipse at 50% 10%,#5a2b55,#24142f 56%,#161020)',border:'#ffb18a66',accent:'#ff743d',line:'#ffb18a80'},pumpkin:{bg:'radial-gradient(ellipse at 50% 10%,#74351e,#3b1c24 56%,#1b111c)',border:'#ffb46c88',accent:'#ffad45',line:'#ffb46c80'},midnight:{bg:'radial-gradient(ellipse at 50% 10%,#293c70,#1d2040 56%,#11101f)',border:'#9abaff77',accent:'#a9bfff',line:'#9abaff80'}};
 function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2800)}
 function formatDate(v){if(!v)return 'DATE TO BE ANNOUNCED';const d=new Date(v+'T12:00:00');return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase()}
