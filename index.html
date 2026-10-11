@@ -93,7 +93,7 @@ const themes={haunted:{bg:'radial-gradient(ellipse at 50% 10%,#5a2b55,#24142f 56
 function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2800)}
 const verifiedEntitlements=new Set();
 const purchaseStorageKey='spookylink-purchase-transactions-v1';
-function readSavedTransactions(){try{return [...new Set(JSON.parse(localStorage.getItem(purchaseStorageKey)||'[]').filter(x=>typeof x==='string'&&/^txn_[a-z0-9]{26}$/i.test(x))].slice(-20)}catch(e){return []}}
+function readSavedTransactions(){try{return [...new Set(JSON.parse(localStorage.getItem(purchaseStorageKey)||'[]').filter(x=>typeof x==='string'&&/^txn_[a-z0-9]{26}$/i.test(x)))].slice(-20)}catch(e){return []}}
 function rememberTransaction(id){if(!/^txn_[a-z0-9]{26}$/i.test(String(id||'')))return;const ids=readSavedTransactions();ids.push(id);try{localStorage.setItem(purchaseStorageKey,JSON.stringify([...new Set(ids)].slice(-20)))}catch(e){showToast('Could not save your purchase reference in this browser. Keep your Paddle receipt.')}}
 function hasEntitlement(key){return verifiedEntitlements.has(key)}
 function apiIsConfigured(){const base=String(paddleConfig.apiBaseUrl||'');return base.startsWith('https://')&&!base.includes('REPLACE')&&!base.includes('YOUR_WORKER')}
