@@ -7,8 +7,8 @@ window.SPOOKYLINK_PADDLE_CONFIG = {
   token: "test_REPLACE_WITH_PADDLE_CLIENT_SIDE_TOKEN",
   apiBaseUrl: "https://REPLACE-WITH-CLOUDFLARE-WORKER-URL",
   prices: {
-    invitation: "pri_REPLACE_WITH_INVITATION_PRICE_ID",
-    mystery: "pri_REPLACE_WITH_MYSTERY_PRICE_ID",
-    bundle: "pri_REPLACE_WITH_BUNDLE_PRICE_ID"
+    invitation: "pri_01m4pqtch149zj705rjf905w4a",
+    mystery: "pri_01m4pr24c4knzg7kkpda30w7as",
+    bundle: "pri_01m4pr5t96cjej61jve8mj0bn7"
   }
 };
