@@ -35,6 +35,13 @@ In your own Paddle account, create three **one-time** USD prices:
 
 Copy their **price IDs** beginning with `pri_` (not product IDs beginning with `pro_`). Sandbox and live IDs are separate. Choose a product/tax category that accurately describes the digital deliverables.
 
+The three sandbox price IDs provided for this project are currently mapped in the same order they were sent:
+- Invitation: `pri_01m4pqtch149zj705rjf905w4a`
+- Haunted Mystery: `pri_01m4pr24c4knzg7kkpda30w7as`
+- Bundle: `pri_01m4pr5t96cjej61jve8mj0bn7`
+
+Confirm that each ID belongs to the matching product in the Paddle dashboard before running a test purchase.
+
 ## 3. Deploy the secure verification Worker
 
 Follow the full dashboard walkthrough in `worker/README.md`. Summary:
