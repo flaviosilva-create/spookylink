@@ -10,9 +10,11 @@ This Worker verifies completed Paddle transactions using Paddle's server-side AP
 4. Open **Settings → Variables and Secrets** and configure these variables:
    - `PADDLE_ENVIRONMENT`: `sandbox` while testing; use `production` only after Paddle approves you.
    - `ALLOWED_ORIGIN`: `https://flaviosilva-create.github.io` (origin only; do not append `/spookylink/`).
-   - `PRICE_INVITATION`: sandbox or live price ID for SpookyLink Invitation.
-   - `PRICE_MYSTERY`: sandbox or live price ID for Haunted Mystery.
-   - `PRICE_BUNDLE`: sandbox or live price ID for the bundle.
+   - `PRICE_INVITATION`: `pri_01m4pqtch149zj705rjf905w4a` for the supplied Sandbox Invitation price.
+   - `PRICE_MYSTERY`: `pri_01m4pr24c4knzg7kkpda30w7as` for the supplied Sandbox Haunted Mystery price.
+   - `PRICE_BUNDLE`: `pri_01m4pr5t96cjej61jve8mj0bn7` for the supplied Sandbox bundle price.
+
+Confirm the mapping matches each price in your Paddle catalog before testing. Use separate live price IDs after approval.
 5. Add `PADDLE_API_KEY` as an **encrypted secret**, not a plain variable. For sandbox, use a sandbox API key with the read permission needed for transactions. Do not paste it into GitHub or this README.
 6. Deploy again and copy the Worker URL, for example `https://spookylink-paddle-verification.YOUR-SUBDOMAIN.workers.dev`.
 7. Open `paddle-config.js` in GitHub and set `apiBaseUrl` to that exact Worker base URL. Do not append `/api/verify-transaction`; the frontend appends the endpoint path.
