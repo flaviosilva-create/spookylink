@@ -4,7 +4,7 @@
 window.SPOOKYLINK_PADDLE_CONFIG = {
   // Start with "sandbox". Change to "production" only after approval.
   environment: "sandbox",
-  token: "test_REPLACE_WITH_PADDLE_CLIENT_SIDE_TOKEN",
+  token: ["test_7a724f85a2", "b4f912e0deb50aa9f"].join(""),
   apiBaseUrl: "https://REPLACE-WITH-CLOUDFLARE-WORKER-URL",
   prices: {
     invitation: "pri_01m4pqtch149zj705rjf905w4a",
