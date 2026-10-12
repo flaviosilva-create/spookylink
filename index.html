@@ -21,6 +21,21 @@
 .game-answer.correct{border-color:var(--lime);background:#d6f36a12}.game-answer.wrong{border-color:#ff743d;background:#ff743d12}.game-feedback{min-height:20px;font-size:12px;color:var(--lime)}
 .game-shell .btn{margin:4px 6px 0 0;font-size:12px}.game-shell [hidden]{display:none!important}
 @media(max-width:800px){.legal-links{gap:12px}.game-shell{padding:15px}}
+
+/* Focused, read-only presentation for invitation recipients */
+body.shared-invite-mode > .nav,
+body.shared-invite-mode main > section:not(#studio),
+body.shared-invite-mode > .footer {display:none!important}
+body.shared-invite-mode #studio{padding:26px 0 42px}
+body.shared-invite-mode #studio .section-head{margin-bottom:20px}
+body.shared-invite-mode .builder-grid{grid-template-columns:minmax(0,680px);justify-content:center}
+body.shared-invite-mode .builder-card,
+body.shared-invite-mode .preview-top,
+body.shared-invite-mode .preview-actions,
+body.shared-invite-mode .preview-card>.note{display:none!important}
+body.shared-invite-mode .preview-card{position:static;padding:clamp(14px,4vw,24px);background:transparent;border:0;max-width:640px;margin:auto}
+body.shared-invite-mode .preview-invite{min-height:460px}
+@media(max-width:800px){body.shared-invite-mode #studio{padding-top:16px}body.shared-invite-mode .preview-invite{min-height:410px}}
 </style>
 </head>
 <body>
@@ -114,7 +129,7 @@ function inviteText(){return 'YOU\'RE INVITED!\n'+$('event').value+'\n\nHosted b
 
 function currentInviteData(){return {event:$('event').value.slice(0,60),host:$('host').value.slice(0,50),date:$('date').value,time:$('time').value,location:$('location').value.slice(0,90),message:$('message').value.slice(0,240),theme:theme}}
 function makeInviteUrl(){const data=new TextEncoder().encode(JSON.stringify(currentInviteData()));let binary='';for(const byte of data)binary+=String.fromCharCode(byte);const token=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');const url=new URL(window.location.href);url.search='';url.searchParams.set('invite',token);url.hash='';return url.toString()}
-function loadInviteFromUrl(){const token=new URLSearchParams(window.location.search).get('invite');if(!token)return;try{let base=token.replace(/-/g,'+').replace(/_/g,'/');base+='='.repeat((4-base.length%4)%4);const bytes=Uint8Array.from(atob(base),c=>c.charCodeAt(0));const data=JSON.parse(new TextDecoder().decode(bytes));const fields={event:60,host:50,location:90,message:240};for(const [id,max] of Object.entries(fields)){if(typeof data[id]==='string')$(id).value=data[id].slice(0,max)}if(typeof data.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(data.date))$('date').value=data.date;if(typeof data.time==='string'&&/^\d{2}:\d{2}$/.test(data.time))$('time').value=data.time;if(['haunted','pumpkin','midnight'].includes(data.theme))theme=data.theme;document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===theme))}catch(e){showToast('This invitation link could not be opened. Ask the sender for a fresh link.');console.warn('Invalid SpookyLink invitation URL',e)}}
+function loadInviteFromUrl(){const token=new URLSearchParams(window.location.search).get('invite');if(!token)return;try{let base=token.replace(/-/g,'+').replace(/_/g,'/');base+='='.repeat((4-base.length%4)%4);const bytes=Uint8Array.from(atob(base),c=>c.charCodeAt(0));const data=JSON.parse(new TextDecoder().decode(bytes));if(!data||typeof data!=='object')throw new Error('invalid_invite');document.body.classList.add('shared-invite-mode');const fields={event:60,host:50,location:90,message:240};for(const [id,max] of Object.entries(fields)){if(typeof data[id]==='string')$(id).value=data[id].slice(0,max)}if(typeof data.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(data.date))$('date').value=data.date;if(typeof data.time==='string'&&/^\d{2}:\d{2}$/.test(data.time))$('time').value=data.time;if(['haunted','pumpkin','midnight'].includes(data.theme))theme=data.theme;document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===theme))}catch(e){showToast('This invitation link could not be opened. Ask the sender for a fresh link.');console.warn('Invalid SpookyLink invitation URL',e)}}
 $('copyDetails').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(inviteText());showToast('Invitation text copied!')}catch(e){fallbackCopy(inviteText())}});
 function fallbackCopy(t,message){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');showToast(message||'Copied to clipboard!')}catch(e){showToast('Copy not available. Select and copy the text manually.')}a.remove()}
 $('copyLink').addEventListener('click',async()=>{const url=makeInviteUrl();try{await navigator.clipboard.writeText(url);showToast('Invitation link copied!')}catch(e){fallbackCopy(url,'Invitation link copied!')}});
@@ -129,6 +144,13 @@ function loadCanvas(){const s=document.createElement('script');s.src='https://cd
 function downloadCanvas(){if(!window.html2canvas)return;window.html2canvas($('previewInvite'),{scale:2,backgroundColor:null,useCORS:true}).then(canvas=>{const a=document.createElement('a');a.download='spookylink-invitation.png';a.href=canvas.toDataURL('image/png');a.click();showToast('Your invitation image is ready!')}).catch(()=>showToast('Could not export image in this browser. Try Copy invitation text.'))}
 loadInviteFromUrl();
 update();
+if(document.body.classList.contains('shared-invite-mode')){
+  document.title=(($('event').value||'Halloween Invitation').trim())+' | SpookyLink';
+  const sharedHeading=document.querySelector('#studio .section-head h2');
+  const sharedDescription=document.querySelector('#studio .section-head p');
+  if(sharedHeading)sharedHeading.textContent="You’re invited.";
+  if(sharedDescription)sharedDescription.textContent="A personal Halloween invitation, made just for you.";
+}
 initializePaddle();
 updateEntitlementUI();
 restorePurchases();
