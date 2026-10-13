@@ -1,13 +1,11 @@
-name = "spookylink-paddle-verification"
+name = "spookylink-stripe-checkout"
 main = "src/index.js"
 compatibility_date = "2026-10-11"
 workers_dev = true
 
-# Set these as Worker variables in Cloudflare, not in this file for live credentials.
 [vars]
-PADDLE_ENVIRONMENT = "sandbox"
-ALLOWED_ORIGIN = "https://flaviosilva-create.github.io"
+STRIPE_MODE = "test"
 
-# Add the following as encrypted Worker secrets (Dashboard > Settings > Variables and Secrets):
-# PADDLE_API_KEY
-# Do not commit API keys or webhook secrets.
+# Add these as encrypted secrets in Cloudflare Worker settings:
+# STRIPE_SECRET_KEY (Stripe test secret key, starts with sk_test_)
+# STRIPE_WEBHOOK_SECRET (signing secret for the Stripe webhook endpoint)
