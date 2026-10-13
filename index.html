@@ -336,7 +336,7 @@ function initializeGuestExperience(){
    $('guestExperience').hidden=true;
    $('guestReturnToEditor').hidden=true;
    document.title='SpookyLink — Interactive Halloween Invitations';
-   window.scrollTo({top:document.getElementById('studio').offsetTop,behavior:'smooth'});
+   document.getElementById('studio').scrollIntoView({behavior:'smooth',block:'start'});
  });
  $('guestBack').addEventListener('click',()=>{
    if(guestStep===0){$('guestQuestionPanel').hidden=true;$('guestIntro').hidden=false;return;}
@@ -438,7 +438,7 @@ function downloadGuestCalendar(){
  const url=URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='spookylink-invitation.ics';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast('Calendar file ready to add to your calendar.');
 }
 
-$('previewExperience').addEventListener('click',()=>{document.body.classList.add('shared-invite-mode');initializeGuestExperience();$('guestReturnToEditor').hidden=false;window.scrollTo({top:0,behavior:'smooth'});});
+$('previewExperience').addEventListener('click',()=>{document.body.classList.add('shared-invite-mode');guestStep=0;guestSelected=Array(guestQuestions.length).fill(null);$('guestIntro').hidden=false;$('guestQuestionPanel').hidden=true;$('guestReveal').hidden=true;initializeGuestExperience();$('guestReturnToEditor').hidden=false;window.scrollTo({top:0,behavior:'smooth'});});
 $('copyDetails').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(inviteText());showToast('Invitation text copied!')}catch(e){fallbackCopy(inviteText())}});
 function fallbackCopy(t,message){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');showToast(message||'Copied to clipboard!')}catch(e){showToast('Copy not available. Select and copy the text manually.')}a.remove()}
 $('copyLink').addEventListener('click',async()=>{if(!hasEntitlement('invitation')){startCheckout('invitation');return;}const url=makeInviteUrl();try{await navigator.clipboard.writeText(url);showToast('Interactive invitation link copied!');}catch(e){fallbackCopy(url,'Interactive invitation link copied!');}});
