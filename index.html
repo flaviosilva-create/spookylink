@@ -295,6 +295,98 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
  .step,.hero .btn-primary,.navcta,.price-card .plan-btn{transition:none!important}
 }
 
+
+/* The guest invitation: gothic Halloween atmosphere and an intentional reveal */
+.guest-shell{border-color:#68405d;background:radial-gradient(ellipse at 50% -9%,#7e3d6250,transparent 41%),radial-gradient(ellipse at 10% 78%,#4e2e7826,transparent 37%),linear-gradient(155deg,#181020 0%,#100c18 54%,#0b0912 100%);box-shadow:0 32px 100px #0009,0 0 55px #a43d4820}
+.guest-shell:before{inset:10px;border-color:#ffbd8e14}
+.guest-haunt-scene{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;border-radius:inherit}
+.guest-haunt-moon{position:absolute;right:9%;top:54px;width:78px;height:78px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe5bc 0%,#ffb675 31%,#de603e 63%,#87384e 100%);box-shadow:0 0 18px #ff91434a,0 0 55px #ff743d20;opacity:.7;animation:guestBloodMoon 8s ease-in-out infinite}
+.guest-haunt-moon:after{content:"";position:absolute;width:70px;height:70px;left:21px;top:-7px;border-radius:50%;background:#181020;box-shadow:-5px 2px 0 #181020}
+.guest-haunt-manor{position:absolute;bottom:5%;left:50%;width:min(76%,480px);height:26%;transform:translateX(-50%);opacity:.55;background:linear-gradient(180deg,#292035,#09080f 90%);clip-path:polygon(0 42%,14% 31%,14% 17%,20% 17%,20% 31%,35% 19%,35% 5%,43% 5%,43% 20%,50% 0,57% 20%,57% 9%,65% 9%,65% 25%,78% 34%,78% 18%,84% 18%,84% 34%,100% 44%,100% 100%,0 100%);filter:drop-shadow(0 -3px 13px #9c7bff14)}
+.guest-haunt-manor:after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;background:repeating-linear-gradient(90deg,transparent 0 9%,#ff9b5738 9.4% 10.8%,transparent 11.2% 18%),linear-gradient(180deg,transparent,#08070c)}
+.guest-haunt-fog{position:absolute;left:-25%;bottom:13%;width:150%;height:100px;border-radius:50%;background:radial-gradient(ellipse at center,#8e4c8b17 0%,#7f43781c 24%,transparent 70%);filter:blur(18px);opacity:.75}
+.guest-haunt-fog.fog-a{animation:guestFogDrift 19s ease-in-out infinite}
+.guest-haunt-fog.fog-b{bottom:22%;left:-35%;opacity:.45;transform:scale(.8);animation:guestFogDrift 25s -8s ease-in-out infinite reverse}
+.guest-haunt-fog.fog-c{bottom:4%;left:-18%;opacity:.5;transform:scale(1.1);animation:guestFogDrift 22s -4s ease-in-out infinite}
+.guest-haunt-bat{position:absolute;left:-12%;top:30%;font-size:19px;filter:drop-shadow(0 0 6px #b78bce40);opacity:0;animation:guestBatFlight 18s linear infinite}
+.guest-haunt-bat.bat-b{top:45%;font-size:14px;animation-delay:-10s}
+.guest-haunt-glow{position:absolute;right:-60px;bottom:2%;width:240px;height:180px;border-radius:50%;background:#a14a5720;filter:blur(45px);animation:guestGlowBreath 7s ease-in-out infinite}
+.guest-stars{position:absolute;inset:0;z-index:1;pointer-events:none}
+.guest-view{z-index:2}
+.guest-intro{z-index:2;min-height:640px;background:radial-gradient(ellipse at 50% 40%,#9c536010,transparent 55%)}
+.guest-eyebrow{color:#ffb98c;text-shadow:0 0 16px #ff743d1c}
+.guest-eyebrow-dot{background:#ff9e61;box-shadow:0 0 12px #ff743d;animation:guestCandlePulse 2.6s ease-in-out infinite}
+.guest-intro h2 em{background:linear-gradient(100deg,#ff874f,#ffd09e 60%,#c7a1ff);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+.guest-lede{color:#c9bdd3}
+.guest-envelope-scene{filter:drop-shadow(0 0 25px #e8785420)}
+.guest-envelope-shadow{background:#000b;filter:blur(17px)}
+.guest-letter-peek{background:linear-gradient(145deg,#fff4db,#ecd5b6);box-shadow:0 8px 28px #0008,0 0 20px #ffe5bd1a}
+.guest-envelope{background:linear-gradient(135deg,#69364e,#28162e);box-shadow:0 18px 34px #0009,0 0 22px #c7565523}
+.guest-envelope-flap{transform-origin:50% 0;transition:transform .72s cubic-bezier(.2,.75,.25,1),filter .72s}
+.guest-letter-peek{transition:transform .72s cubic-bezier(.16,1,.3,1),filter .72s}
+.guest-envelope-seal{transition:opacity .28s ease,transform .42s cubic-bezier(.2,.75,.25,1),box-shadow .3s}
+.guest-shell.is-opening .guest-envelope-flap{transform:translateY(-34px) rotate(44deg) scale(.94);filter:brightness(1.35)}
+.guest-shell.is-opening .guest-letter-peek{transform:translateY(-58px) rotate(-2deg) scale(1.035);filter:brightness(1.12)}
+.guest-shell.is-opening .guest-envelope-seal{opacity:0;transform:translateX(-50%) scale(.2) rotate(40deg);box-shadow:0 0 26px #ffb27d88}
+.guest-shell.is-opening .guest-envelope{filter:brightness(.72);transform:translateY(8px);transition:filter .65s,transform .65s}
+.guest-shell.is-opening .guest-envelope-scene{filter:drop-shadow(0 0 30px #ff743d3b)}
+.guest-intro-copy{position:relative;z-index:2}
+.guest-main-cta{background:linear-gradient(110deg,#ff743d,#ffac67)!important;color:#251126!important;box-shadow:0 9px 28px #ff743d2c,0 0 0 1px #ffc58a30 inset!important;transition:transform .2s,box-shadow .2s}
+.guest-main-cta:hover{transform:translateY(-2px);box-shadow:0 13px 34px #ff743d40,0 0 25px #ff743d20!important}
+.guest-question-panel{background:linear-gradient(180deg,#ffffff02,transparent);z-index:2}
+.guest-question-copy h2{text-wrap:balance}
+.guest-choice{transition:transform .22s,border-color .22s,background .22s,box-shadow .22s}
+.guest-choice:hover{box-shadow:0 7px 24px #0004,0 0 18px #ff743d0a}
+.guest-progress-fill{background:linear-gradient(90deg,#ff743d,#f9ad78,#b99aff);box-shadow:0 0 12px #ff743d4d}
+.guest-reveal{z-index:2}
+.guest-reveal-top{color:#ffbf91}
+.guest-reveal-spark{animation:guestTwinkle 2.8s ease-in-out infinite}
+.guest-result{background:linear-gradient(110deg,#ff743d0b,#9c7bff0b);border-color:#ffb18a24}
+.guest-result-icon{background:radial-gradient(circle,#ff743d22,transparent 80%);box-shadow:inset 0 0 0 1px #ffb18a13}
+.guest-letter-card{background:radial-gradient(ellipse at 50% 0%,#85475c 0%,#3a203e 48%,#140f1d 100%);border-color:#d59a7d96;box-shadow:0 27px 70px #0008,0 0 35px #ff743d0a;isolation:isolate}
+.guest-letter-card:before{z-index:0;border-color:#eebf963e}
+.guest-letter-card:after{z-index:0;top:-104px;border-color:#ffdcba20;box-shadow:0 0 0 16px #f3c79e09,0 0 0 34px #f3c79e06,0 0 55px #ff743d0b}
+.guest-letter-scenery{position:absolute;z-index:0;left:0;right:0;bottom:0;height:43%;opacity:.52;pointer-events:none;background:linear-gradient(180deg,transparent,#110d1b80 88%),linear-gradient(180deg,transparent 20%,#0a0810 21%);clip-path:polygon(0 62%,10% 52%,10% 38%,15% 38%,15% 52%,28% 44%,28% 24%,36% 24%,36% 43%,45% 35%,45% 10%,50% 0,55% 10%,55% 38%,64% 45%,64% 27%,71% 27%,71% 50%,84% 44%,84% 33%,90% 33%,90% 54%,100% 63%,100% 100%,0 100%)}
+.guest-letter-scenery:after{content:"";position:absolute;inset:48% 0 0;background:repeating-linear-gradient(90deg,transparent 0 9%,#ffac6a4a 9.5% 11%,transparent 11.5% 20%);opacity:.52}
+.guest-letter-kicker,.guest-letter-ornament,.guest-letter-moon,.guest-letter-card h2,.guest-host-line,.guest-letter-rule,.guest-detail-grid,.guest-event-message,.guest-letter-bottom{z-index:1}
+.guest-letter-card h2{background:linear-gradient(105deg,#fff0db,#ffcca1 52%,#e0c4ff);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+.guest-letter-moon{background:radial-gradient(circle at 34% 30%,#fff2d4,#f7c57c 53%,#e27950 100%);box-shadow:0 0 22px #ffd8a653,0 0 55px #ff743d29;animation:guestEclipseGlow 5.5s ease-in-out infinite}
+.guest-letter-moon span{background:#4a2748;box-shadow:-2px 0 0 #4a2748}
+.guest-letter-rule:before,.guest-letter-rule:after{background:linear-gradient(90deg,transparent,var(--letter-border),transparent)}
+.guest-detail-item{background:#0c09184a;border-color:#ffdfc01c;backdrop-filter:blur(4px)}
+.guest-reveal-actions .btn-primary{background:linear-gradient(110deg,#ff743d,#ffad69);color:#251126;box-shadow:0 8px 24px #ff743d22}
+.guest-reveal-actions .btn-outline{border-color:#82677f;background:#ffffff05}
+.guest-replay-row button{color:#ffb18a}
+.guest-reveal.reveal-arrival .guest-letter-card{animation:guestInvitationArrives 1.1s cubic-bezier(.16,1,.3,1) both;animation-delay:.12s}
+.guest-reveal.reveal-arrival .guest-result{animation:guestFadeRise .65s cubic-bezier(.16,1,.3,1) both;animation-delay:.12s}
+.guest-reveal.reveal-arrival .guest-reveal-top{animation:guestFadeRise .6s ease-out both}
+.guest-reveal.reveal-arrival .guest-detail-item{animation:guestFadeRise .55s ease-out both}
+.guest-reveal.reveal-arrival .guest-detail-item:nth-child(1){animation-delay:.62s}
+.guest-reveal.reveal-arrival .guest-detail-item:nth-child(2){animation-delay:.76s}
+@keyframes guestBloodMoon{0%,100%{transform:translateY(0);filter:saturate(.9)}50%{transform:translateY(7px);filter:saturate(1.2)}}
+@keyframes guestFogDrift{0%,100%{transform:translate3d(-3%,0,0) scale(.9)}50%{transform:translate3d(9%,-9px,0) scale(1.1)}}
+@keyframes guestBatFlight{0%{transform:translateX(0) translateY(0) rotate(-5deg);opacity:0}9%{opacity:.65}45%{transform:translateX(340px) translateY(-24px) rotate(6deg);opacity:.58}82%{opacity:.4}100%{transform:translateX(760px) translateY(12px) rotate(-4deg);opacity:0}}
+@keyframes guestGlowBreath{0%,100%{opacity:.6;transform:scale(.9)}50%{opacity:1;transform:scale(1.12)}}
+@keyframes guestCandlePulse{0%,100%{box-shadow:0 0 8px #ff743d88}50%{box-shadow:0 0 17px #ff743d}}
+@keyframes guestEclipseGlow{0%,100%{box-shadow:0 0 22px #ffd8a653,0 0 55px #ff743d29}50%{box-shadow:0 0 32px #ffd8a680,0 0 72px #ff743d40}}
+@keyframes guestInvitationArrives{0%{opacity:0;transform:translateY(22px) scale(.965) rotateX(3deg);filter:brightness(.65);box-shadow:0 4px 15px #0008}48%{opacity:1;filter:brightness(1.2)}72%{transform:translateY(-3px) scale(1.004);filter:brightness(1.06)}100%{opacity:1;transform:translateY(0) scale(1);filter:brightness(1);box-shadow:0 27px 70px #0008,0 0 40px #ff743d18}}
+@keyframes guestFadeRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:650px){
+ .guest-haunt-moon{width:57px;height:57px;right:8%;top:48px}
+ .guest-haunt-moon:after{width:52px;height:52px;left:16px;top:-5px}
+ .guest-haunt-manor{width:92%;height:20%;bottom:4%;opacity:.42}
+ .guest-haunt-bat{font-size:15px;top:25%}
+ .guest-haunt-bat.bat-b{top:40%}
+ .guest-letter-scenery{height:32%;opacity:.43}
+ .guest-intro{min-height:590px}
+ .guest-envelope-scene{transform:scale(.94);margin:6px auto}
+ .guest-letter-card{box-shadow:0 20px 48px #0008}
+}
+@media(prefers-reduced-motion:reduce){
+ .guest-haunt-moon,.guest-haunt-fog,.guest-haunt-bat,.guest-haunt-glow,.guest-envelope-seal,.guest-letter-moon,.guest-eyebrow-dot,.guest-main-cta,.guest-reveal-spark,.guest-reveal.reveal-arrival .guest-letter-card,.guest-reveal.reveal-arrival .guest-result,.guest-reveal.reveal-arrival .guest-reveal-top,.guest-reveal.reveal-arrival .guest-detail-item{animation:none!important}
+ .guest-envelope-flap,.guest-letter-peek,.guest-envelope-seal,.guest-envelope,.guest-main-cta,.guest-choice{transition:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -323,12 +415,12 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
 <div class="steps"><article class="step"><div class="step-num">01</div><h3>Make it yours</h3><p>Personalize the party details, host name, date, and message. Your invitation card updates as you create.</p></article><article class="step"><div class="step-num">02</div><h3>Set the mood</h3><p>Choose a visual mood, then let guests answer three playful questions before the invitation is revealed.</p></article><article class="step"><div class="step-num">03</div><h3>Share your invite</h3><p>Unlock the complete experience, copy your shareable invitation link, and let guests answer three playful questions before the party details appear.</p></article></div>
 </div></section>
 <section class="section builder-section" id="studio"><div class="wrap"><div class="section-head"><div class="eyebrow">The invitation studio</div><h2>Your party. Your kind of spooky.</h2><p>Personalize the event details and preview the guest journey. Sharing and high-resolution downloads unlock after purchase.</p></div>
-<div class="guest-experience" id="guestExperience" hidden><div class="guest-shell"><button id="guestReturnToEditor" class="guest-return" type="button" hidden>← Back to your design</button><div class="guest-stars" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span><span>✧</span><span>✦</span></div><div id="guestIntro" class="guest-intro guest-view"><div class="guest-eyebrow"><span class="guest-eyebrow-dot"></span> PRIVATE CORRESPONDENCE</div><div class="guest-envelope-scene" aria-hidden="true"><div class="guest-envelope-shadow"></div><div class="guest-letter-peek"><span>YOU ARE INVITED</span><b>✦</b></div><div class="guest-envelope"><div class="guest-envelope-flap"></div><div class="guest-envelope-seal">✦</div></div><span class="guest-orbit guest-orbit-one">✧</span><span class="guest-orbit guest-orbit-two">✦</span></div><div class="guest-intro-copy"><p class="guest-overline">A note meant just for you</p><h2>Something <em>strange</em> is waiting.</h2><p class="guest-lede">Before the details reveal themselves, make three tiny choices. Trust your instincts. The night is already taking shape.</p><div class="guest-intro-meta"><span>◈ 3 QUICK QUESTIONS</span><span>◈ 1 SPECIAL REVEAL</span></div><button id="guestBegin" class="btn btn-primary guest-main-cta" type="button">Break the seal <span>↗</span></button><p class="guest-footnote">No wrong answers. Just your kind of spooky.</p></div></div><div id="guestQuestionPanel" class="guest-question-panel guest-view" hidden><div class="guest-question-top"><button id="guestBack" class="guest-back" type="button">← Back</button><span id="guestStepCounter">QUESTION 01 / 03</span></div><div class="guest-progress-track"><div id="guestProgressFill" class="guest-progress-fill"></div></div><div class="guest-question-copy"><p id="guestQuestionEyebrow" class="guest-overline">FIRST IMPRESSION</p><h2 id="guestQuestionTitle">The envelope has found you.</h2><p id="guestQuestionDescription">Every little choice tells us something about your kind of Halloween.</p></div><div id="guestChoices" class="guest-choices"></div><div class="guest-question-footer"><span id="guestSelectionHint">Choose one to continue.</span><button id="guestContinue" class="btn btn-primary" type="button" disabled>Continue <span>↗</span></button></div></div><div id="guestReveal" class="guest-reveal guest-view" hidden><div class="guest-reveal-top"><span class="guest-reveal-kicker">YOUR INVITATION HAS ARRIVED</span><span class="guest-reveal-spark">✦</span></div><div id="guestPreviewOffer" class="guest-preview-offer" hidden>
+<div class="guest-experience" id="guestExperience" hidden><div class="guest-shell"><button id="guestReturnToEditor" class="guest-return" type="button" hidden>← Back to your design</button><div class="guest-haunt-scene" aria-hidden="true"><span class="guest-haunt-moon"></span><span class="guest-haunt-manor"></span><span class="guest-haunt-fog fog-a"></span><span class="guest-haunt-fog fog-b"></span><span class="guest-haunt-fog fog-c"></span><span class="guest-haunt-bat bat-a">🦇</span><span class="guest-haunt-bat bat-b">🦇</span><span class="guest-haunt-glow"></span></div><div class="guest-stars" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span><span>✧</span><span>✦</span></div><div id="guestIntro" class="guest-intro guest-view"><div class="guest-eyebrow"><span class="guest-eyebrow-dot"></span> A SEALED INVITATION FROM THE DARK</div><div class="guest-envelope-scene" aria-hidden="true"><div class="guest-envelope-shadow"></div><div class="guest-letter-peek"><span>YOU ARE INVITED</span><b>✦</b></div><div class="guest-envelope"><div class="guest-envelope-flap"></div><div class="guest-envelope-seal">✦</div></div><span class="guest-orbit guest-orbit-one">✧</span><span class="guest-orbit guest-orbit-two">✦</span></div><div class="guest-intro-copy"><p class="guest-overline">THE HOUSE HAS BEEN WAITING</p><h2>Something <em>wicked</em> is waiting.</h2><p class="guest-lede">Before the details reveal themselves, make three tiny choices. Trust your instincts. The night is already taking shape.</p><div class="guest-intro-meta"><span>◈ 3 QUICK QUESTIONS</span><span>◈ 1 SPECIAL REVEAL</span></div><button id="guestBegin" class="btn btn-primary guest-main-cta" type="button">Break the seal <span>↗</span></button><p class="guest-footnote">No wrong answers. Just your kind of spooky.</p></div></div><div id="guestQuestionPanel" class="guest-question-panel guest-view" hidden><div class="guest-question-top"><button id="guestBack" class="guest-back" type="button">← Back</button><span id="guestStepCounter">QUESTION 01 / 03</span></div><div class="guest-progress-track"><div id="guestProgressFill" class="guest-progress-fill"></div></div><div class="guest-question-copy"><p id="guestQuestionEyebrow" class="guest-overline">FIRST IMPRESSION</p><h2 id="guestQuestionTitle">The envelope has found you.</h2><p id="guestQuestionDescription">Every little choice tells us something about your kind of Halloween.</p></div><div id="guestChoices" class="guest-choices"></div><div class="guest-question-footer"><span id="guestSelectionHint">Choose one to continue.</span><button id="guestContinue" class="btn btn-primary" type="button" disabled>Continue <span>↗</span></button></div></div><div id="guestReveal" class="guest-reveal guest-view" hidden><div class="guest-reveal-top"><span class="guest-reveal-kicker">THE INVITATION HAS BEEN UNSEALED</span><span class="guest-reveal-spark">✦</span></div><div id="guestPreviewOffer" class="guest-preview-offer" hidden>
   <div class="guest-preview-offer-kicker">PREVIEW COMPLETE</div>
   <h3>Your invitation is ready for its final touch.</h3>
   <p>The preview is free. Unlock the finished experience to copy your private guest link, add the event to a calendar, and save the high-resolution invitation.</p>
   <button id="guestUnlockBtn" class="btn btn-primary" type="button">Unlock the invitation — $9.99 ↗</button>
-</div><div class="guest-result"><span id="guestResultIcon" class="guest-result-icon">🌙</span><div><span class="guest-result-label">YOUR HALLOWEEN ALTER EGO</span><h3 id="guestResultTitle">The Midnight Muse</h3><p id="guestResultCopy">You bring a little magic wherever the night takes you.</p></div></div><div id="guestLetterCard" class="guest-letter-card"><div class="guest-letter-ornament" aria-hidden="true">✦　✧　✦</div><p class="guest-letter-kicker">YOU HAVE BEEN SUMMONED TO</p><div class="guest-letter-moon" aria-hidden="true"><span></span></div><h2 id="guestEventTitle">A Night of Haunting</h2><p id="guestHostLine" class="guest-host-line">HOSTED BY YOUR FAVORITE HOST</p><div class="guest-letter-rule"><span>✦</span></div><div class="guest-detail-grid"><div class="guest-detail-item"><span>WHEN</span><strong id="guestEventDate">SATURDAY, OCTOBER 31, 2026</strong><b id="guestEventTime">8:00 PM</b></div><div class="guest-detail-item"><span>WHERE</span><strong id="guestEventLocation">THE OLD MANSION</strong></div></div><p id="guestEventMessage" class="guest-event-message">Costumes, spooky treats, and curious things.</p><div class="guest-letter-bottom"><span>COME AS YOU ARE…</span><span>IF YOU DARE.</span></div></div><div class="guest-reveal-actions"><button id="guestCalendarBtn" class="btn btn-primary" type="button">Add to calendar <span>↗</span></button><button id="guestCopyBtn" class="btn btn-outline" type="button">Copy details</button><button id="guestShareBtn" class="btn btn-outline" type="button">Share invite</button></div><div class="guest-replay-row"><p>Your choices made this reveal yours.</p><button id="guestReplayBtn" type="button">Experience it again ↻</button></div></div></div></div><div class="builder-grid"><div class="builder-card"><h3>Create your interactive invite</h3><p class="subcopy">Preview the design for free. Unlock the complete guest journey, shareable invitation link, and high-resolution keepsake artwork.</p>
+</div><div class="guest-result"><span id="guestResultIcon" class="guest-result-icon">🌙</span><div><span class="guest-result-label">YOUR HALLOWEEN ALTER EGO</span><h3 id="guestResultTitle">The Midnight Muse</h3><p id="guestResultCopy">You bring a little magic wherever the night takes you.</p></div></div><div id="guestLetterCard" class="guest-letter-card"><span class="guest-letter-scenery" aria-hidden="true"></span><div class="guest-letter-ornament" aria-hidden="true">✦　✧　✦</div><p class="guest-letter-kicker">YOU HAVE BEEN SUMMONED TO</p><div class="guest-letter-moon" aria-hidden="true"><span></span></div><h2 id="guestEventTitle">A Night of Haunting</h2><p id="guestHostLine" class="guest-host-line">HOSTED BY YOUR FAVORITE HOST</p><div class="guest-letter-rule"><span>✦</span></div><div class="guest-detail-grid"><div class="guest-detail-item"><span>WHEN</span><strong id="guestEventDate">SATURDAY, OCTOBER 31, 2026</strong><b id="guestEventTime">8:00 PM</b></div><div class="guest-detail-item"><span>WHERE</span><strong id="guestEventLocation">THE OLD MANSION</strong></div></div><p id="guestEventMessage" class="guest-event-message">Costumes, spooky treats, and curious things.</p><div class="guest-letter-bottom"><span>COME AS YOU ARE…</span><span>IF YOU DARE.</span></div></div><div class="guest-reveal-actions"><button id="guestCalendarBtn" class="btn btn-primary" type="button">Add to calendar <span>↗</span></button><button id="guestCopyBtn" class="btn btn-outline" type="button">Copy details</button><button id="guestShareBtn" class="btn btn-outline" type="button">Share invite</button></div><div class="guest-replay-row"><p>Your choices made this reveal yours.</p><button id="guestReplayBtn" type="button">Experience it again ↻</button></div></div></div></div><div class="builder-grid"><div class="builder-card"><h3>Create your interactive invite</h3><p class="subcopy">Preview the design for free. Unlock the complete guest journey, shareable invitation link, and high-resolution keepsake artwork.</p>
 <div class="field"><label for="event">PARTY TITLE</label><input id="event" maxlength="60" value="A Night of Haunting" placeholder="e.g. The Midnight Masquerade"></div>
 <div class="field"><label for="host">HOST NAME</label><input id="host" maxlength="50" value="Your favorite host" placeholder="Who's throwing the party?"></div>
 <div class="two"><div class="field"><label for="date">DATE</label><input id="date" type="date" value="2026-10-31"></div><div class="field"><label for="time">TIME</label><input id="time" type="time" value="20:00"></div></div>
@@ -444,7 +536,7 @@ function initializeGuestExperience(){
  $('guestBegin').addEventListener('click',()=>{
    const shell=document.querySelector('.guest-shell');const button=$('guestBegin');
    button.disabled=true;shell.classList.add('is-opening');
-   const delay=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:420;
+   const delay=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:780;
    setTimeout(()=>{shell.classList.remove('is-opening');button.disabled=false;showGuestQuestion(0);},delay);
  });
  $('guestReturnToEditor').addEventListener('click',()=>{
@@ -532,7 +624,8 @@ function showGuestReveal(){
  $('guestLetterCard').className='guest-letter-card theme-'+theme;
  updateGuestPreviewOffer();
  const reveal=$('guestReveal');
- if(typeof reveal.animate==='function')reveal.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'translateY(0)'}],{duration:420,easing:'cubic-bezier(.16,1,.3,1)'});
+ reveal.classList.remove('reveal-arrival');void reveal.offsetWidth;reveal.classList.add('reveal-arrival');
+ if(typeof reveal.animate==='function'&&!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches))reveal.animate([{opacity:0,transform:'translateY(18px) scale(.99)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:650,easing:'cubic-bezier(.16,1,.3,1)'});
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function guestDetailsText(){
