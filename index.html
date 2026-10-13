@@ -105,6 +105,14 @@ body.shared-invite-mode .preview-card{position:static;padding:clamp(14px,4vw,24p
 body.shared-invite-mode .preview-invite{min-height:460px}
 @media(max-width:800px){body.shared-invite-mode #studio{padding-top:16px}body.shared-invite-mode .preview-invite{min-height:410px}}
 
+
+.guest-envelope-flap{transition:transform .42s cubic-bezier(.2,.75,.25,1)}
+.guest-letter-peek{transition:transform .42s cubic-bezier(.2,.75,.25,1)}
+.guest-envelope-seal{transition:opacity .25s ease,transform .3s ease}
+.guest-shell.is-opening .guest-envelope-flap{transform:translateY(-22px) rotate(30deg)}
+.guest-shell.is-opening .guest-letter-peek{transform:translateY(-42px) rotate(-5deg)}
+.guest-shell.is-opening .guest-envelope-seal{opacity:0;transform:translateX(-50%) scale(.65)}
+
 /* Interactive invitation reveal */
 .guest-experience{max-width:820px;margin:0 auto 26px}
 .guest-experience[hidden],.guest-view[hidden]{display:none!important}
@@ -194,7 +202,7 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
 <div>
 <div class="eyebrow"><span class="eyedot"></span> Your Halloween, but make it spooky</div>
 <h1>Don’t just invite them.<br><em>Make an entrance.</em></h1>
-<p class="hero-copy">Halloween invitations that feel like the start of a story. Create your design, then invite your guests into The Hollow Bell—a six-chapter mystery with a coded letter, a hidden key, and a final reveal.</p>
+<p class="hero-copy">Halloween invitations that become a little experience. Guests answer three playful questions, discover their Halloween alter ego, and then uncover the party details in a cinematic reveal.</p>
 <div class="hero-actions"><a class="btn btn-primary" href="#studio">Create the experience <span>↗</span></a><a class="btn btn-outline" href="#mystery">Discover the mystery <span>↓</span></a></div>
 <p class="micro">✦ An interactive guest journey · A reveal worth opening · Made for phones</p>
 </div>
@@ -245,7 +253,7 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
 <article class="price-card"><div class="popular">ONE-TIME DIGITAL GAME</div><div class="plan">HAUNTED MYSTERY</div><div class="price">$4.99 <small>add-on</small></div><p>A story-driven six-chapter mystery with cipher puzzles, a suspect ledger, a vault lock, evidence collection, and a full ending.</p><ul><li>Six connected story chapters</li><li>Cipher and pattern puzzles</li><li>Evidence board and optional hints</li><li>Final deduction and story ending</li><li>Progress saved on your device</li></ul><button class="btn btn-outline plan-btn" data-plan="mystery" type="button">Unlock the mystery — $4.99</button></article>
 <article class="price-card featured"><div class="plan">THE FULL EXPERIENCE</div><div class="price">$12.99 <small>one-time</small></div><p>The complete interactive invitation experience plus the six-chapter mystery game.</p><ul><li>Interactive guest journey and reveal</li><li>High-resolution invitation keepsake</li><li>Six-chapter Haunted Mystery</li><li>One complete Halloween experience</li></ul><button class="btn btn-primary plan-btn" data-plan="bundle" type="button">Get the bundle — $12.99</button></article></div>
 <p class="disclaimer">One-time prices in USD. Applicable taxes are shown at checkout. Secure checkout is powered by Stripe when the site owner has configured the secure checkout service.</p></div></section>
-<section class="section" style="padding-top:0"><div class="wrap"><div class="section-head"><div class="eyebrow">A few little details</div><h2>Questions from the crypt.</h2></div><div class="faq"><details><summary>Can I use this on my phone?</summary><p>Yes. The page is designed to adapt to mobile and desktop screens. The invitation preview updates as you edit the form.</p></details><details><summary>Does it create a permanent invitation link?</summary><p>SpookyLink creates a shareable invitation URL that carries the event details in the URL itself, plus a paid downloadable invitation image. It does not store invitations on a server or include RSVP collection or guest management.</p></details><details><summary>Can I buy the Haunted Mystery today?</summary><p>Haunted Mystery is a six-chapter browser game with connected clues, an evidence file, hints, a final deduction, and a story ending. After checkout is verified, the game unlocks in the same browser.</p></details></div></div></section>
+<section class="section" style="padding-top:0"><div class="wrap"><div class="section-head"><div class="eyebrow">A few little details</div><h2>Questions from the crypt.</h2></div><div class="faq"><details><summary>Can I use this on my phone?</summary><p>Yes. The interactive questions, personalized reveal, calendar download, and sharing actions are designed for mobile and desktop.</p></details><details><summary>Does it create a permanent invitation link?</summary><p>Yes. After checkout, you can copy a private invitation link. Guests answer three playful questions before the custom invitation is revealed. Event details travel inside the link, so share it only with intended guests. Answers are not saved, and the invitation does not collect RSVPs.</p></details><details><summary>Can I buy the Haunted Mystery today?</summary><p>Haunted Mystery is a six-chapter browser game with connected clues, an evidence file, hints, a final deduction, and a story ending. After checkout is verified, the game unlocks in the same browser.</p></details></div></div></section>
 </main>
 <footer class="footer"><div class="wrap footer-inner"><a class="brand" href="#"><span class="brandmark">✦</span> spooky<span style="color:var(--orange);margin-left:-10px">link</span></a><span>Made for Halloween nights and stories worth sharing.</span><nav class="legal-links" aria-label="Legal"><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a><a href="refunds.html">Refunds</a><a href="contact.html">Contact</a></nav><span>© 2026 SpookyLink · Independent digital project</span></div></footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -314,7 +322,12 @@ function initializeGuestExperience(){
  if(description)description.textContent='Three quick choices. One invitation made special for you.';
  document.title=(($('event').value||'A Halloween Invitation').trim())+' | SpookyLink';
  $('guestLetterCard').classList.add('theme-'+theme);
- $('guestBegin').addEventListener('click',()=>showGuestQuestion(0));
+ $('guestBegin').addEventListener('click',()=>{
+   const shell=document.querySelector('.guest-shell');const button=$('guestBegin');
+   button.disabled=true;shell.classList.add('is-opening');
+   const delay=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:420;
+   setTimeout(()=>{shell.classList.remove('is-opening');button.disabled=false;showGuestQuestion(0);},delay);
+ });
  $('guestBack').addEventListener('click',()=>{
    if(guestStep===0){$('guestQuestionPanel').hidden=true;$('guestIntro').hidden=false;return;}
    showGuestQuestion(guestStep-1);
@@ -361,6 +374,10 @@ function showGuestQuestion(index){
  $('guestContinue').innerHTML=guestStep===guestQuestions.length-1?'Reveal my invitation <span>↗</span>':'Continue <span>↗</span>';
  $('guestSelectionHint').textContent=guestSelected[guestStep]===null?'Choose one to continue.':'Lovely choice. Ready when you are.';
  window.scrollTo({top:0,behavior:'smooth'});
+ const panel=$('guestQuestionPanel');
+ if(typeof panel.animate==='function'&&!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+  panel.animate([{opacity:0,transform:'translateX(12px)'},{opacity:1,transform:'translateX(0)'}],{duration:260,easing:'ease-out'});
+ }
 }
 function showGuestReveal(){
  $('guestIntro').hidden=true;$('guestQuestionPanel').hidden=true;$('guestReveal').hidden=false;
