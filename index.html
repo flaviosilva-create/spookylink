@@ -387,6 +387,71 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
  .guest-envelope-flap,.guest-letter-peek,.guest-envelope-seal,.guest-envelope,.guest-main-cta,.guest-choice{transition:none!important}
 }
 
+
+/* Mobile-first visibility pass: make the Halloween scene unmistakably animated */
+.hero-art{min-height:535px;overflow:visible}
+.hero-haunt{z-index:1;inset:-22px -7% -8px;overflow:hidden}
+.hero-art .glow{z-index:0;width:min(100%,440px);height:440px}
+.invite{z-index:2;width:min(360px,82%);min-height:390px}
+.float-tag{z-index:4}
+.haunt-moon{width:clamp(100px,13vw,142px);right:9%;top:0;opacity:1;box-shadow:0 0 35px #ff743d54,0 0 100px #ff743d2c}
+.haunt-manor{height:49%;bottom:1%;width:min(96%,470px);opacity:.82;filter:drop-shadow(0 -7px 24px #9c7bff25)}
+.haunt-manor:after{background:repeating-linear-gradient(90deg,transparent 0 12%,#ff743d3b 12.5% 14.5%,transparent 15% 24%),linear-gradient(180deg,transparent,#080710)}
+.haunt-fog{position:absolute;left:-25%;bottom:1%;width:150%;height:155px;border-radius:50%;background:radial-gradient(ellipse at center,#b27fc31f 0%,#9c7bff16 34%,transparent 72%);filter:blur(17px);opacity:.9;pointer-events:none}
+.haunt-fog.fog-one{animation:heroFogDrift 12s ease-in-out infinite}
+.haunt-fog.fog-two{bottom:14%;left:-38%;height:115px;opacity:.58;transform:scale(.8);animation:heroFogDrift 16s -5s ease-in-out infinite reverse}
+.haunt-fog.fog-three{bottom:0;left:-15%;height:85px;opacity:.48;transform:scale(1.2);animation:heroFogDrift 14s -3s ease-in-out infinite}
+.haunt-bat{font-size:29px;filter:drop-shadow(0 0 12px #b79bff75)}
+.bat-two{font-size:21px}.bat-three{font-size:24px}
+.haunt-spark{font-size:27px;text-shadow:0 0 20px #ff743d9c}
+.hero-art:before{content:"";position:absolute;z-index:0;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 44%,transparent 26%,#11091812 66%,#09071055 100%);opacity:.75}
+.haunt-wraith{position:absolute;z-index:3;top:3%;left:3%;width:70px;height:112px;pointer-events:none;opacity:.93;filter:drop-shadow(0 0 18px #c8a8ff70);clip-path:polygon(50% 0,68% 5%,83% 20%,92% 39%,94% 62%,100% 83%,80% 75%,64% 94%,48% 79%,31% 100%,17% 79%,0 88%,7% 58%,8% 38%,18% 18%,33% 6%);background:radial-gradient(ellipse at 50% 23%,#fff3e7 0%,#e3c9ffbb 29%,#ac8ce48c 56%,#8c6bbd20 78%,transparent 100%);animation:wraithDrift 6.4s ease-in-out infinite}
+.haunt-wraith:before{content:"";position:absolute;left:29%;top:33%;width:8px;height:6px;border-radius:50%;background:#7d314b;box-shadow:15px 0 #7d314b,0 0 8px #ffb78a,15px 0 8px #ffb78a}
+.haunt-wraith:after{content:"";position:absolute;left:29%;top:51%;width:35px;height:15px;border-radius:50%;background:radial-gradient(ellipse,#f1d5ff42,transparent 70%);filter:blur(5px)}
+@keyframes heroFogDrift{0%,100%{transform:translate3d(-5%,0,0) scale(.92)}50%{transform:translate3d(9%,-17px,0) scale(1.13)}}
+@keyframes wraithDrift{0%,100%{transform:translate3d(0,0,0) rotate(-4deg);opacity:.65}50%{transform:translate3d(9px,-17px,0) rotate(5deg);opacity:1}}
+@keyframes batFlightMobile{0%{transform:translateX(0) translateY(0) rotate(-7deg);opacity:0}10%{opacity:.85}48%{transform:translateX(220px) translateY(-27px) rotate(7deg);opacity:.8}85%{opacity:.65}100%{transform:translateX(420px) translateY(14px) rotate(-5deg);opacity:0}}
+@media(max-width:800px){
+ .hero{gap:12px;padding-bottom:48px}
+ .hero-art{min-height:490px;margin-top:0}
+ .hero-haunt{inset:-14px -5% -3px}
+ .haunt-moon{width:94px;right:8%;top:1%}
+ .haunt-manor{height:44%;width:100%;bottom:2%;opacity:.78}
+ .haunt-fog{height:125px;bottom:3%}
+ .haunt-bat{animation-name:batFlightMobile;animation-duration:11s;font-size:22px}
+ .bat-two{animation-delay:-5s;font-size:16px}.bat-three{animation-delay:-8s;font-size:19px}
+ .haunt-wraith{left:1%;top:1%;width:59px;height:92px}
+ .invite{width:min(350px,84%);min-height:370px}
+ .tag-one{left:0;top:67px}
+ .tag-two{right:0;bottom:55px}
+}
+@media(max-width:600px){
+ .hero{padding-top:38px;padding-bottom:40px}
+ .hero-art{min-height:455px;margin:4px 0 0}
+ .hero-haunt{inset:-8px -4% 0}
+ .haunt-moon{width:78px;right:6%;top:1%}
+ .haunt-manor{width:112%;height:38%;bottom:1%;left:50%}
+ .haunt-fog{height:110px;bottom:2%;filter:blur(13px)}
+ .haunt-bat{animation-duration:9s;font-size:18px}
+ .bat-two{font-size:14px}.bat-three{font-size:16px}
+ .haunt-wraith{left:0;top:0;width:48px;height:76px;opacity:.9}
+ .invite{width:min(324px,86%);min-height:350px;padding:23px 18px}
+ .invite h2{font-size:34px}
+ .float-tag{max-width:47%;font-size:10px;padding:8px 9px}
+ .tag-one{top:56px;left:0}
+ .tag-two{right:0;bottom:42px}
+}
+@media(max-width:380px){
+ .hero-art{min-height:425px}
+ .haunt-moon{width:66px}
+ .haunt-wraith{width:42px;height:67px}
+ .invite{width:88%;min-height:338px;padding:21px 15px}
+ .float-tag{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+ .haunt-moon,.haunt-fog,.haunt-bat,.haunt-spark,.haunt-wraith,.hero-art .glow{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -405,7 +470,7 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
 <div class="hero-proof-row"><span><i>✦</i> FREE TO PREVIEW</span><span><i>✦</i> $9.99 ONE-TIME</span><span><i>✦</i> NO SUBSCRIPTION</span></div>
 </div>
 <div class="hero-art" aria-label="Animated Halloween invitation preview">
-<div class="hero-haunt" aria-hidden="true"><span class="haunt-moon"></span><span class="haunt-manor"></span><span class="haunt-bat bat-one">🦇</span><span class="haunt-bat bat-two">🦇</span><span class="haunt-bat bat-three">🦇</span><span class="haunt-spark spark-one">✦</span><span class="haunt-spark spark-two">✧</span><span class="haunt-spark spark-three">✦</span><span class="haunt-spark spark-four">✧</span></div>
+<div class="hero-haunt" aria-hidden="true"><span class="haunt-moon"></span><span class="haunt-manor"></span><span class="haunt-fog fog-one"></span><span class="haunt-fog fog-two"></span><span class="haunt-fog fog-three"></span><span class="haunt-bat bat-one">🦇</span><span class="haunt-bat bat-two">🦇</span><span class="haunt-bat bat-three">🦇</span><span class="haunt-spark spark-one">✦</span><span class="haunt-spark spark-two">✧</span><span class="haunt-spark spark-three">✦</span><span class="haunt-spark spark-four">✧</span></div><span class="haunt-wraith" aria-hidden="true"></span>
 <div class="glow"></div><div class="float-tag tag-one">🕯️ <b>Not just another invite.</b><br>A tiny haunted experience.</div>
 <article class="invite"><div class="moon"></div><div class="invite-kicker">YOU HAVE BEEN SUMMONED</div><h2>A Night<br>of Haunting</h2><div class="invite-sub">Costumes · Cocktails · Curious things</div><div class="invite-line"></div><div class="invite-details">OCTOBER 31 · 8:00 PM<br>THE OLD MANSION<br>Dress like you belong in a ghost story.</div><div class="invite-rsvp">OPEN IF YOU DARE</div></article>
 <div class="float-tag tag-two">🎃 <b>3 choices.</b><br>One unforgettable reveal.</div>
