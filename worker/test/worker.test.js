@@ -3,106 +3,117 @@ import assert from "node:assert/strict";
 import handler from "../src/index.js";
 
 const origin = "https://flaviosilva-create.github.io";
-const priceInvitation = "pri_" + "a".repeat(26);
-const priceMystery = "pri_" + "b".repeat(26);
-const priceBundle = "pri_" + "c".repeat(26);
-const txValid = "txn_" + "d".repeat(26);
-const txWrongPrice = "txn_" + "e".repeat(26);
-const txNotCompleted = "txn_" + "f".repeat(26);
-const txRefunded = "txn_" + "g".repeat(26);
-
-const env = {
-  PADDLE_API_KEY: "test-secret",
-  PADDLE_ENVIRONMENT: "sandbox",
-  ALLOWED_ORIGIN: origin,
-  PRICE_INVITATION: priceInvitation,
-  PRICE_MYSTERY: priceMystery,
-  PRICE_BUNDLE: priceBundle
-};
-
-const transactions = new Map([
-  [txValid, { id: txValid, status: "completed", details: { line_items: [{ price_id: priceInvitation }] }, adjustments: [] }],
-  [txWrongPrice, { id: txWrongPrice, status: "completed", items: [{ price: { id: "pri_" + "z".repeat(26) } }], adjustments: [] }],
-  [txNotCompleted, { id: txNotCompleted, status: "ready", details: { line_items: [{ price_id: priceInvitation }] }, adjustments: [] }],
-  [txRefunded, { id: txRefunded, status: "completed", line_items: [{ price_id: priceInvitation }], adjustments: [{ status: "approved", action: "refund" }] }]
+const env = { STRIPE_SECRET_KEY: "sk_test_fake", STRIPE_MODE: "test" };
+const paidSessions = new Map([
+  ["cs_test_paidinvite", { id: "cs_test_paidinvite", payment_status: "paid", metadata: { plan: "invitation" } }],
+  ["cs_test_paidmystery", { id: "cs_test_paidmystery", payment_status: "paid", metadata: { plan: "mystery" } }],
+  ["cs_test_paidbundle", { id: "cs_test_paidbundle", payment_status: "paid", metadata: { plan: "bundle" } }],
+  ["cs_test_unpaid", { id: "cs_test_unpaid", payment_status: "unpaid", metadata: { plan: "invitation" } }],
+  ["cs_test_badplan", { id: "cs_test_badplan", payment_status: "paid", metadata: { plan: "admin" } }]
 ]);
 
 const originalFetch = globalThis.fetch;
-
+let lastCheckoutBody = null;
 test.before(() => {
-  globalThis.fetch = async (url) => {
-    const path = new URL(url).pathname;
-    const id = decodeURIComponent(path.split("/").pop());
-    const transaction = transactions.get(id);
-    if (!transaction) return new Response(JSON.stringify({ error: "not_found" }), { status: 404 });
-    return new Response(JSON.stringify({ data: transaction }), {
-      status: 200,
-      headers: { "content-type": "application/json" }
-    });
+  globalThis.fetch = async (url, init = {}) => {
+    const parsed = new URL(url);
+    if (parsed.pathname === "/v1/checkout/sessions" && init.method === "POST") {
+      lastCheckoutBody = new URLSearchParams(init.body);
+      return new Response(JSON.stringify({ id: "cs_test_created123", url: "https://checkout.stripe.com/c/pay/cs_test_created123" }), {
+        status: 200, headers: { "content-type": "application/json" }
+      });
+    }
+    if (parsed.pathname.startsWith("/v1/checkout/sessions/")) {
+      const id = decodeURIComponent(parsed.pathname.split("/").pop());
+      const session = paidSessions.get(id);
+      if (!session) return new Response(JSON.stringify({ error: { message: "not found" } }), { status: 404 });
+      return new Response(JSON.stringify(session), { status: 200, headers: { "content-type": "application/json" } });
+    }
+    return new Response(JSON.stringify({ error: { message: "unexpected request" } }), { status: 500 });
   };
 });
+test.after(() => { globalThis.fetch = originalFetch; });
 
-test.after(() => {
-  globalThis.fetch = originalFetch;
-});
-
-async function callVerify(body, requestOrigin = origin, runtimeEnv = env) {
-  const request = new Request("https://worker.example/api/verify-transaction", {
-    method: "POST",
-    headers: { Origin: requestOrigin, "content-type": "application/json" },
-    body: JSON.stringify(body)
-  });
-  const response = await handler.fetch(request, runtimeEnv);
+async function request(path, { method = "GET", body, requestOrigin = origin, runtimeEnv = env } = {}) {
+  const response = await handler.fetch(new Request("https://worker.example" + path, {
+    method,
+    headers: { Origin: requestOrigin, ...(body ? { "content-type": "application/json" } : {}) },
+    ...(body ? { body: JSON.stringify(body) } : {})
+  }), runtimeEnv);
   return { response, payload: await response.json() };
 }
 
 test("health endpoint is available", async () => {
-  const response = await handler.fetch(new Request("https://worker.example/api/health", {
-    headers: { Origin: origin }
-  }), env);
+  const { response, payload } = await request("/api/health");
   assert.equal(response.status, 200);
-  assert.equal((await response.json()).ok, true);
+  assert.equal(payload.ok, true);
+  assert.equal(payload.service, "spookylink-stripe-checkout");
 });
 
-test("valid completed SpookyLink transaction unlocks only its configured product", async () => {
-  const { response, payload } = await callVerify({ transactionId: txValid });
+test("invitation checkout uses server-defined USD price and hosted Checkout", async () => {
+  const { response, payload } = await request("/api/create-checkout-session", { method: "POST", body: { plan: "invitation" } });
+  assert.equal(response.status, 200);
+  assert.match(payload.url, /^https:\/\/checkout\.stripe\.com\//);
+  assert.equal(lastCheckoutBody.get("line_items[0][price_data][unit_amount]"), "999");
+  assert.equal(lastCheckoutBody.get("line_items[0][price_data][currency]"), "usd");
+  assert.equal(lastCheckoutBody.get("metadata[plan]"), "invitation");
+  assert.equal(lastCheckoutBody.get("mode"), "payment");
+});
+
+test("bundle checkout uses the correct server-defined amount", async () => {
+  const { response } = await request("/api/create-checkout-session", { method: "POST", body: { plan: "bundle" } });
+  assert.equal(response.status, 200);
+  assert.equal(lastCheckoutBody.get("line_items[0][price_data][unit_amount]"), "1299");
+});
+
+test("unknown plan is rejected", async () => {
+  const { response, payload } = await request("/api/create-checkout-session", { method: "POST", body: { plan: "free" } });
+  assert.equal(response.status, 400);
+  assert.equal(payload.error, "invalid_plan");
+});
+
+test("paid invitation session unlocks only the invitation", async () => {
+  const { response, payload } = await request("/api/verify-session?session_id=cs_test_paidinvite");
   assert.equal(response.status, 200);
   assert.deepEqual(payload.products, ["invitation"]);
 });
 
-test("unknown product price is rejected", async () => {
-  const { response, payload } = await callVerify({ transactionId: txWrongPrice });
-  assert.equal(response.status, 403);
-  assert.equal(payload.error, "transaction_has_no_spookylink_items");
+test("paid bundle session unlocks invitation and mystery", async () => {
+  const { response, payload } = await request("/api/verify-session?session_id=cs_test_paidbundle");
+  assert.equal(response.status, 200);
+  assert.deepEqual(payload.products, ["invitation", "mystery"]);
 });
 
-test("incomplete transaction is rejected", async () => {
-  const { response, payload } = await callVerify({ transactionId: txNotCompleted });
+test("unpaid Checkout Session is rejected", async () => {
+  const { response, payload } = await request("/api/verify-session?session_id=cs_test_unpaid");
   assert.equal(response.status, 402);
   assert.equal(payload.error, "payment_not_completed");
 });
 
-test("approved refund removes access", async () => {
-  const { response, payload } = await callVerify({ transactionId: txRefunded });
-  assert.equal(response.status, 403);
-  assert.equal(payload.error, "transaction_adjustment_pending_or_approved");
+test("unknown plan metadata is rejected", async () => {
+  const { response, payload } = await request("/api/verify-session?session_id=cs_test_badplan");
+  assert.equal(response.status, 402);
+  assert.equal(payload.error, "payment_not_completed");
 });
 
-test("malformed transaction ID is rejected before Paddle API access", async () => {
-  const { response, payload } = await callVerify({ transactionId: "not-a-transaction" });
+test("malformed session ID is rejected before Stripe API access", async () => {
+  const { response, payload } = await request("/api/verify-session?session_id=bad-id");
   assert.equal(response.status, 400);
-  assert.equal(payload.error, "invalid_transaction_id");
+  assert.equal(payload.error, "invalid_session_id");
 });
 
 test("requests from an unapproved origin are rejected", async () => {
-  const { response, payload } = await callVerify({ transactionId: txValid }, "https://attacker.example");
+  const { response, payload } = await request("/api/create-checkout-session", {
+    method: "POST", body: { plan: "invitation" }, requestOrigin: "https://attacker.example"
+  });
   assert.equal(response.status, 403);
   assert.equal(payload.error, "origin_not_allowed");
 });
 
-test("missing Paddle API key fails closed", async () => {
-  const envWithoutKey = { ...env, PADDLE_API_KEY: "" };
-  const { response, payload } = await callVerify({ transactionId: txValid }, origin, envWithoutKey);
+test("missing Stripe secret fails closed", async () => {
+  const { response, payload } = await request("/api/create-checkout-session", {
+    method: "POST", body: { plan: "invitation" }, runtimeEnv: { STRIPE_SECRET_KEY: "" }
+  });
   assert.equal(response.status, 503);
   assert.equal(payload.error, "server_misconfigured");
 });
