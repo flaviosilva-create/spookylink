@@ -215,7 +215,7 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
 </div>
 <div class="preview-card"><div class="preview-top"><h3>Live preview</h3><span class="live"><span class="eyedot"></span> Live</span></div>
 <div class="preview-invite" id="previewInvite"><div class="moon"></div><div class="invite-kicker">YOU'RE INVITED TO</div><h2 id="outEvent">A Night of Haunting</h2><div class="invite-sub" id="outHost">HOSTED BY YOUR FAVORITE HOST</div><div class="invite-line"></div><div class="preview-message" id="outMessage">Costumes, spooky treats, and curious things. Come dressed like you belong in a ghost story.</div><div class="preview-details"><span id="outDate">SATURDAY, OCTOBER 31, 2026</span><br><span id="outTime">8:00 PM</span><br><span id="outLocation">THE OLD MANSION</span></div><div class="preview-rsvp" aria-hidden="true">SAVE THE DATE</div></div>
-<div class="preview-actions"><button class="btn btn-outline" id="copyLink" type="button">Copy invite link</button><button class="btn btn-outline" id="copyDetails" type="button">Copy text</button><button class="btn btn-outline" id="shareInvite" type="button">Share ↗</button></div><p class="note">Your invitation link includes the event details so guests can view them. Share it only with intended guests; answers to the playful questions are not stored.</p>
+<div class="preview-actions"><button class="btn btn-outline" id="copyLink" type="button">Unlock guest link</button><button class="btn btn-outline" id="copyDetails" type="button">Copy text</button><button class="btn btn-outline" id="shareInvite" type="button">Share experience ↗</button></div><p class="note">Your invitation link includes the event details so guests can view them. Share it only with intended guests; answers to the playful questions are not stored.</p>
 </div></div></div></section>
 <section class="section" id="mystery"><div class="wrap"><div class="mystery">
 <div class="mystery-art"><span class="stamp">STORY-DRIVEN MYSTERY</span><div><div class="key">🗝️</div><div class="serif" style="font-size:25px;margin-top:12px">The Hollow Bell</div><div style="font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:8px">SIX CHAPTERS. ONE HIDDEN TRUTH.</div></div></div>
@@ -280,10 +280,135 @@ function inviteText(){return 'YOU\'RE INVITED!\n'+$('event').value+'\n\nHosted b
 function currentInviteData(){return {event:$('event').value.slice(0,60),host:$('host').value.slice(0,50),date:$('date').value,time:$('time').value,location:$('location').value.slice(0,90),message:$('message').value.slice(0,240),theme:theme}}
 function makeInviteUrl(){const data=new TextEncoder().encode(JSON.stringify(currentInviteData()));let binary='';for(const byte of data)binary+=String.fromCharCode(byte);const token=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');const url=new URL(window.location.href);url.search='';url.searchParams.set('invite',token);url.hash='';return url.toString()}
 function loadInviteFromUrl(){const token=new URLSearchParams(window.location.search).get('invite');if(!token)return;try{let base=token.replace(/-/g,'+').replace(/_/g,'/');base+='='.repeat((4-base.length%4)%4);const bytes=Uint8Array.from(atob(base),c=>c.charCodeAt(0));const data=JSON.parse(new TextDecoder().decode(bytes));if(!data||typeof data!=='object')throw new Error('invalid_invite');document.body.classList.add('shared-invite-mode');const fields={event:60,host:50,location:90,message:240};for(const [id,max] of Object.entries(fields)){if(typeof data[id]==='string')$(id).value=data[id].slice(0,max)}if(typeof data.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(data.date))$('date').value=data.date;if(typeof data.time==='string'&&/^\d{2}:\d{2}$/.test(data.time))$('time').value=data.time;if(['haunted','pumpkin','midnight'].includes(data.theme))theme=data.theme;document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===theme))}catch(e){showToast('This invitation link could not be opened. Ask the sender for a fresh link.');console.warn('Invalid SpookyLink invitation URL',e)}}
+
+const guestQuestions=[
+ {eyebrow:"FIRST IMPRESSION",title:"The envelope has found you.",description:"It is sealed with black wax. How will you open it?",options:[
+  {icon:"🗝️",title:"Break the seal",copy:"Rules are only suggestions.",kind:"bold"},
+  {icon:"🌙",title:"Hold it to the moon",copy:"There may be a clue in the light.",kind:"mysterious"},
+  {icon:"🎃",title:"Give it a little shake",copy:"Curiosity has never hurt anyone… much.",kind:"playful"}
+ ]},
+ {eyebrow:"SET THE SCENE",title:"Choose your kind of Halloween.",description:"There is no wrong answer. Pick the atmosphere you would run toward.",options:[
+  {icon:"🥀",title:"Elegant after dark",copy:"Velvet, candlelight, and secrets.",kind:"mysterious"},
+  {icon:"🍂",title:"Pumpkin-lit chaos",copy:"Sweet treats and a little mischief.",kind:"playful"},
+  {icon:"🕯️",title:"A proper ghost story",copy:"Fog, old houses, and brave hearts.",kind:"bold"}
+ ]},
+ {eyebrow:"ONE LAST CHOICE",title:"A mysterious host offers you a gift.",description:"Choose carefully. It says something about the guest you are.",options:[
+  {icon:"🔑",title:"An old brass key",copy:"You want to know what is hidden.",kind:"bold"},
+  {icon:"🧪",title:"A glowing little potion",copy:"You always leave room for wonder.",kind:"playful"},
+  {icon:"✉️",title:"A note marked “trust no one”",copy:"The mystery is the whole point.",kind:"mysterious"}
+ ]}
+];
+let guestStep=0;
+let guestSelected=Array(guestQuestions.length).fill(null);
+function initializeGuestExperience(){
+ const experience=$('guestExperience');if(!experience)return;
+ experience.hidden=false;
+ const heading=document.querySelector('#studio .section-head h2');
+ const description=document.querySelector('#studio .section-head p');
+ if(heading)heading.textContent='A little mystery awaits.';
+ if(description)description.textContent='Three quick choices. One invitation made special for you.';
+ document.title=(($('event').value||'A Halloween Invitation').trim())+' | SpookyLink';
+ $('guestLetterCard').classList.add('theme-'+theme);
+ $('guestBegin').addEventListener('click',()=>showGuestQuestion(0));
+ $('guestBack').addEventListener('click',()=>{
+   if(guestStep===0){$('guestQuestionPanel').hidden=true;$('guestIntro').hidden=false;return;}
+   showGuestQuestion(guestStep-1);
+ });
+ $('guestContinue').addEventListener('click',()=>{
+   if(guestSelected[guestStep]===null)return;
+   if(guestStep<guestQuestions.length-1)showGuestQuestion(guestStep+1);else showGuestReveal();
+ });
+ $('guestReplayBtn').addEventListener('click',()=>{
+   guestStep=0;guestSelected=Array(guestQuestions.length).fill(null);
+   $('guestReveal').hidden=true;$('guestQuestionPanel').hidden=true;$('guestIntro').hidden=false;
+   $('guestLetterCard').className='guest-letter-card theme-'+theme;
+   window.scrollTo({top:0,behavior:'smooth'});
+ });
+ $('guestCalendarBtn').addEventListener('click',downloadGuestCalendar);
+ $('guestCopyBtn').addEventListener('click',copyGuestDetails);
+ $('guestShareBtn').addEventListener('click',shareGuestInvite);
+}
+function showGuestQuestion(index){
+ guestStep=Math.max(0,Math.min(index,guestQuestions.length-1));
+ $('guestIntro').hidden=true;$('guestReveal').hidden=true;$('guestQuestionPanel').hidden=false;
+ const q=guestQuestions[guestStep];
+ $('guestStepCounter').textContent='QUESTION '+String(guestStep+1).padStart(2,'0')+' / '+String(guestQuestions.length).padStart(2,'0');
+ $('guestProgressFill').style.width=((guestStep+1)/guestQuestions.length*100)+'%';
+ $('guestQuestionEyebrow').textContent=q.eyebrow;$('guestQuestionTitle').textContent=q.title;$('guestQuestionDescription').textContent=q.description;
+ $('guestChoices').innerHTML='';
+ q.options.forEach((option,i)=>{
+  const button=document.createElement('button');button.type='button';button.className='guest-choice'+(guestSelected[guestStep]===i?' selected':'');
+  button.setAttribute('aria-pressed',guestSelected[guestStep]===i?'true':'false');
+  const icon=document.createElement('span');icon.className='guest-choice-icon';icon.textContent=option.icon;
+  const title=document.createElement('span');title.className='guest-choice-title';title.textContent=option.title;
+  const copy=document.createElement('span');copy.className='guest-choice-copy';copy.textContent=option.copy;
+  const check=document.createElement('span');check.className='guest-choice-check';check.textContent='✓';
+  button.append(icon,title,copy,check);
+  button.addEventListener('click',()=>{
+   guestSelected[guestStep]=i;
+   Array.from($('guestChoices').children).forEach((el,j)=>{el.classList.toggle('selected',j===i);el.setAttribute('aria-pressed',j===i?'true':'false');});
+   $('guestContinue').disabled=false;
+   $('guestSelectionHint').textContent='Lovely choice. Ready when you are.';
+  });
+  $('guestChoices').appendChild(button);
+ });
+ $('guestContinue').disabled=guestSelected[guestStep]===null;
+ $('guestContinue').innerHTML=guestStep===guestQuestions.length-1?'Reveal my invitation <span>↗</span>':'Continue <span>↗</span>';
+ $('guestSelectionHint').textContent=guestSelected[guestStep]===null?'Choose one to continue.':'Lovely choice. Ready when you are.';
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function showGuestReveal(){
+ $('guestIntro').hidden=true;$('guestQuestionPanel').hidden=true;$('guestReveal').hidden=false;
+ const scores={bold:0,playful:0,mysterious:0};
+ guestSelected.forEach((pick,i)=>{if(pick!==null)scores[guestQuestions[i].options[pick].kind]++;});
+ const maxScore=Math.max(...Object.values(scores));
+ let kind=Object.keys(scores).find(key=>scores[key]===maxScore);
+ const tied=Object.values(scores).filter(v=>v===maxScore).length>1;
+ if(tied)kind=theme==='pumpkin'?'playful':theme==='midnight'?'mysterious':'bold';
+ const profiles={
+  bold:{icon:'🗝️',title:'The Fearless Guest',copy:'You follow the clues, open the door, and make every strange night a story worth telling.'},
+  playful:{icon:'🎃',title:'The Pumpkin Plotter',copy:'You bring the mischief, the charm, and exactly the right amount of delightful chaos.'},
+  mysterious:{icon:'🌙',title:'The Midnight Muse',copy:'You notice what others miss. A little mystery was always going to find you.'}
+ };
+ const profile=profiles[kind];
+ $('guestResultIcon').textContent=profile.icon;$('guestResultTitle').textContent=profile.title;$('guestResultCopy').textContent=profile.copy;
+ $('guestEventTitle').textContent=$('event').value.trim()||'Your Halloween Party';
+ $('guestHostLine').textContent='HOSTED BY '+(($('host').value.trim()||'A MYSTERIOUS HOST').toUpperCase());
+ $('guestEventDate').textContent=formatDate($('date').value);
+ $('guestEventTime').textContent=formatTime($('time').value);
+ $('guestEventLocation').textContent=($('location').value.trim()||'LOCATION TO BE ANNOUNCED').toUpperCase();
+ $('guestEventMessage').textContent=$('message').value.trim()||'A little mystery, a little magic, and a night to remember.';
+ $('guestLetterCard').className='guest-letter-card theme-'+theme;
+ const reveal=$('guestReveal');
+ if(typeof reveal.animate==='function')reveal.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'translateY(0)'}],{duration:420,easing:'cubic-bezier(.16,1,.3,1)'});
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function guestDetailsText(){
+ return 'YOU ARE INVITED\n'+($('event').value.trim()||'Your Halloween Party')+'\n\nHosted by '+($('host').value.trim()||'A Mysterious Host')+'\n'+formatDate($('date').value)+' · '+formatTime($('time').value)+'\n'+($('location').value.trim()||'Location to be announced')+'\n\n'+($('message').value.trim()||'A little mystery, a little magic, and a night to remember.');
+}
+async function copyGuestDetails(){
+ const value=guestDetailsText();
+ try{await navigator.clipboard.writeText(value);showToast('Invitation details copied.');}catch(e){fallbackCopy(value,'Invitation details copied.');}
+}
+async function shareGuestInvite(){
+ const title=$('event').value.trim()||'A Halloween Invitation';const textValue=guestDetailsText();
+ if(navigator.share){try{await navigator.share({title:title,text:textValue,url:window.location.href});return;}catch(e){if(e&&e.name==='AbortError')return;}}
+ fallbackCopy(window.location.href,'Invitation link copied.');
+}
+function downloadGuestCalendar(){
+ const date=$('date').value;const time=$('time').value;
+ if(!date){showToast('The host has not added a date yet.');return;}
+ const datePart=date.replace(/-/g,'');const timePart=(time||'20:00').replace(':','')+'00';
+ const esc=v=>String(v||'').replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+ const stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+ const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//SpookyLink//Interactive Invitation//EN','CALSCALE:GREGORIAN','BEGIN:VEVENT','UID:'+Date.now()+'@spookylink','DTSTAMP:'+stamp,'DTSTART:'+datePart+'T'+timePart,'SUMMARY:'+esc($('event').value.trim()||'Halloween Party'),'LOCATION:'+esc($('location').value.trim()),'DESCRIPTION:'+esc(guestDetailsText()),'END:VEVENT','END:VCALENDAR'].join('\r\n');
+ const url=URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='spookylink-invitation.ics';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast('Calendar file ready to add to your calendar.');
+}
+
 $('copyDetails').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(inviteText());showToast('Invitation text copied!')}catch(e){fallbackCopy(inviteText())}});
 function fallbackCopy(t,message){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');showToast(message||'Copied to clipboard!')}catch(e){showToast('Copy not available. Select and copy the text manually.')}a.remove()}
-$('copyLink').addEventListener('click',async()=>{const url=makeInviteUrl();try{await navigator.clipboard.writeText(url);showToast('Invitation link copied!')}catch(e){fallbackCopy(url,'Invitation link copied!')}});
-$('shareInvite').addEventListener('click',async()=>{const url=makeInviteUrl();if(navigator.share){try{await navigator.share({title:$('event').value||'Halloween invitation',text:'You are invited! Open your SpookyLink invitation:',url})}catch(e){}}else{fallbackCopy(url,'Invitation link copied!')}});
+$('copyLink').addEventListener('click',async()=>{if(!hasEntitlement('invitation')){startCheckout('invitation');return;}const url=makeInviteUrl();try{await navigator.clipboard.writeText(url);showToast('Interactive invitation link copied!');}catch(e){fallbackCopy(url,'Interactive invitation link copied!');}});
+$('shareInvite').addEventListener('click',async()=>{if(!hasEntitlement('invitation')){startCheckout('invitation');return;}const url=makeInviteUrl();if(navigator.share){try{await navigator.share({title:$('event').value||'Halloween invitation',text:'You are invited! Open your interactive SpookyLink experience:',url});}catch(e){if(e&&e.name!=='AbortError')fallbackCopy(url,'Interactive invitation link copied.');}}else{fallbackCopy(url,'Interactive invitation link copied!');}});
 document.querySelectorAll('[data-demo-answer]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-demo-answer]').forEach(x=>x.classList.remove('wrong','correct'));if(b.dataset.demoAnswer==='lilykey'){ $('demoFeedback').textContent='Decoded. The key is under the lily. The full case has six connected chapters.';b.classList.add('correct')}else{$('demoFeedback').textContent='Not quite. Move every letter back by one place in the alphabet.';b.classList.add('wrong')}}));
 function saveMysteryProgress(){try{localStorage.setItem('spookylink-hollow-bell-v2',JSON.stringify({index:gameIndex,evidence:gameEvidence,solved:[...solvedChapters],complete:gameComplete}))}catch(e){}}
 function restoreMysteryProgress(){try{const d=JSON.parse(localStorage.getItem('spookylink-hollow-bell-v2')||'null');if(!d||typeof d!=='object')return;gameIndex=Math.min(Math.max(0,Number(d.index)||0),gameChapters.length-1);gameEvidence=Array.isArray(d.evidence)?d.evidence.filter(x=>x&&typeof x.title==='string'&&typeof x.detail==='string').slice(0,gameChapters.length):[];solvedChapters=new Set(Array.isArray(d.solved)?d.solved.filter(x=>Number.isInteger(x)&&x>=0&&x<gameChapters.length):[]);gameComplete=d.complete===true&&solvedChapters.size===gameChapters.length;gameSolved=solvedChapters.has(gameIndex)}catch(e){}}
@@ -305,7 +430,7 @@ $('submitSequence').addEventListener('click',()=>{const q=gameChapters[gameIndex
 $('revealHint').addEventListener('click',()=>{if(gameSolved)return;const q=gameChapters[gameIndex];gameHintUsed=true;$('gameFeedback').style.color='var(--purple)';$('gameFeedback').textContent='HINT: '+q.hint;$('revealHint').textContent='Hint revealed';$('revealHint').disabled=true});
 $('nextClue').addEventListener('click',()=>{if(!gameSolved)return;if(gameIndex===gameChapters.length-1){showCaseEnding();showToast('Case closed. You solved The Hollow Bell.');return}gameIndex++;gameSolved=solvedChapters.has(gameIndex);saveMysteryProgress();renderQuestion();$('mysteryGame').scrollIntoView({behavior:'smooth',block:'nearest'})});
 $('restartGame').addEventListener('click',()=>{gameIndex=0;gameSolved=false;gameHintUsed=false;gameComplete=false;gameEvidence=[];solvedChapters=new Set();try{localStorage.removeItem('spookylink-hollow-bell-v2')}catch(e){}renderCaseEvidence();renderQuestion();showToast('The case file has been reset. Begin again.');$('mysteryGame').scrollIntoView({behavior:'smooth',block:'nearest'})});
-function updateEntitlementUI(){const inviteUnlocked=hasEntitlement('invitation'),mysteryUnlocked=hasEntitlement('mystery');$('downloadInvite').textContent=inviteUnlocked?'Download high-resolution invitation ↗':'Unlock high-resolution download — $9.99 ↗';const lock=$('gameLock'),content=$('gameContent');if(lock&&content){const wasHidden=content.hidden;lock.hidden=mysteryUnlocked;content.hidden=!mysteryUnlocked;if(mysteryUnlocked&&wasHidden)renderQuestion()}const ib=document.querySelector('.plan-btn[data-plan="invitation"]'),mb=document.querySelector('.plan-btn[data-plan="mystery"]'),bb=document.querySelector('.plan-btn[data-plan="bundle"]');if(ib)ib.textContent=inviteUnlocked?'Invitation unlocked ✓':'Buy invitation — $9.99';if(mb)mb.textContent=mysteryUnlocked?'Mystery unlocked ✓':'Unlock the mystery — $4.99';if(bb)bb.textContent=inviteUnlocked&&mysteryUnlocked?'Full bundle unlocked ✓':'Get the bundle — $12.99'}
+function updateEntitlementUI(){const inviteUnlocked=hasEntitlement('invitation'),mysteryUnlocked=hasEntitlement('mystery');$('downloadInvite').textContent=inviteUnlocked?'Download high-resolution invitation ↗':'Unlock high-resolution download — $9.99 ↗';const lock=$('gameLock'),content=$('gameContent');if(lock&&content){const wasHidden=content.hidden;lock.hidden=mysteryUnlocked;content.hidden=!mysteryUnlocked;if(mysteryUnlocked&&wasHidden)renderQuestion()}const ib=document.querySelector('.plan-btn[data-plan="invitation"]'),mb=document.querySelector('.plan-btn[data-plan="mystery"]'),bb=document.querySelector('.plan-btn[data-plan="bundle"]');if(ib)ib.textContent=inviteUnlocked?'Invitation unlocked ✓':'Buy invitation — $9.99';if(mb)mb.textContent=mysteryUnlocked?'Mystery unlocked ✓':'Unlock the mystery — $4.99';if(bb)bb.textContent=inviteUnlocked&&mysteryUnlocked?'Full bundle unlocked ✓':'Get the bundle — $12.99';const cl=$('copyLink'),sh=$('shareInvite');if(cl)cl.textContent=inviteUnlocked?'Copy guest link':'Unlock guest link — $9.99';if(sh)sh.textContent=inviteUnlocked?'Share experience ↗':'Unlock sharing — $9.99';}
 document.querySelectorAll('.plan-btn').forEach(b=>b.addEventListener('click',()=>{const plan=b.dataset.plan;if(plan==='invitation'&&hasEntitlement('invitation')){$('studio').scrollIntoView({behavior:'smooth'});return}if(plan==='mystery'&&hasEntitlement('mystery')){$('mystery').scrollIntoView({behavior:'smooth'});return}if(plan==='bundle'&&hasEntitlement('invitation')&&hasEntitlement('mystery')){$('mystery').scrollIntoView({behavior:'smooth'});return}startCheckout(plan)}));
 $('unlockMystery').addEventListener('click',()=>startCheckout('mystery'));
 $('downloadInvite').addEventListener('click',()=>{if(!hasEntitlement('invitation')){startCheckout('invitation');return}if(!window.html2canvas){showToast('Preparing download…');loadCanvas();return}downloadCanvas()});
@@ -315,11 +440,7 @@ restoreMysteryProgress();
 loadInviteFromUrl();
 update();
 if(document.body.classList.contains('shared-invite-mode')){
-  document.title=(($('event').value||'Halloween Invitation').trim())+' | SpookyLink';
-  const sharedHeading=document.querySelector('#studio .section-head h2');
-  const sharedDescription=document.querySelector('#studio .section-head p');
-  if(sharedHeading)sharedHeading.textContent="You’re invited.";
-  if(sharedDescription)sharedDescription.textContent="A personal Halloween invitation, made just for you.";
+  initializeGuestExperience();
 }
 handleCheckoutReturn();
 updateEntitlementUI();
