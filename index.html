@@ -452,6 +452,51 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
  .haunt-moon,.haunt-fog,.haunt-bat,.haunt-spark,.haunt-wraith,.hero-art .glow{animation:none!important}
 }
 
+
+/* Keep one clear illustration per viewport; move it directly under the headline on phones */
+.hero-art-mobile{display:none}
+@media(max-width:600px){
+ .hero-copy-column{display:block}
+ .hero-art-desktop{display:none!important}
+ .hero-art-mobile{display:grid!important;order:initial;isolation:isolate;position:relative;width:calc(100% + 10px);min-height:350px;height:350px;margin:7px -5px 13px;overflow:visible}
+ .hero-art-mobile .hero-haunt{inset:-15px -2% 0;z-index:1;overflow:hidden}
+ .hero-art-mobile .glow{width:100%;height:320px;filter:blur(38px);opacity:.9}
+ .hero-art-mobile .haunt-moon{width:74px;right:8%;top:0}
+ .hero-art-mobile .haunt-manor{width:110%;height:38%;bottom:1%;opacity:.88}
+ .hero-art-mobile .haunt-fog{height:112px;filter:blur(12px);opacity:.85}
+ .hero-art-mobile .haunt-bat{animation:batFlightMobile 9s linear infinite;will-change:transform,opacity}
+ .hero-art-mobile .bat-one{animation-delay:-1s}
+ .hero-art-mobile .bat-two{animation-delay:-4.2s}
+ .hero-art-mobile .bat-three{animation-delay:-7s}
+ .hero-art-mobile .haunt-spark{font-size:21px}
+ .hero-art-mobile .haunt-wraith{top:2%;left:2%;width:50px;height:80px;z-index:3;will-change:transform,opacity}
+ .hero-art-mobile .invite{width:min(300px,80%);min-height:316px;padding:19px 14px;z-index:2}
+ .hero-art-mobile .invite .moon{width:61px;height:61px;margin:1px auto 13px}
+ .hero-art-mobile .invite .moon:after{width:55px;height:55px;left:16px;top:-6px}
+ .hero-art-mobile .invite h2{font-size:31px;margin:8px 0}
+ .hero-art-mobile .invite-sub{font-size:11px}
+ .hero-art-mobile .invite-line{margin:13px auto}
+ .hero-art-mobile .invite-details{font-size:10px;line-height:1.8}
+ .hero-art-mobile .invite-rsvp{margin-top:13px;padding:8px 15px;font-size:10px}
+ .hero-art-mobile .tag-one{left:0;top:38px}
+ .hero-art-mobile .tag-two{right:0;bottom:30px}
+ .hero-copy-column>.hero-copy{margin-top:2px}
+ .hero-copy-column>.hero-actions{margin-top:17px}
+}
+@media(max-width:380px){
+ .hero-art-mobile{height:322px;min-height:322px;margin-top:4px}
+ .hero-art-mobile .invite{width:79%;min-height:294px;padding:17px 12px}
+ .hero-art-mobile .invite .moon{width:53px;height:53px;margin-bottom:10px}
+ .hero-art-mobile .invite .moon:after{width:48px;height:48px;left:14px;top:-5px}
+ .hero-art-mobile .invite h2{font-size:28px}
+ .hero-art-mobile .invite-details{font-size:9px}
+ .hero-art-mobile .haunt-wraith{width:42px;height:67px}
+ .hero-art-mobile .float-tag{max-width:45%;font-size:8px;padding:7px 8px}
+}
+@media(prefers-reduced-motion:reduce){
+ .hero-art-mobile .haunt-moon,.hero-art-mobile .haunt-fog,.hero-art-mobile .haunt-bat,.hero-art-mobile .haunt-spark,.hero-art-mobile .haunt-wraith,.hero-art-mobile .glow,.hero-art-mobile .invite,.hero-art-mobile .invite .moon,.hero-art-mobile .invite:after,.hero-art-mobile .tag-one,.hero-art-mobile .tag-two{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -465,11 +510,17 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
 <div class="hero-copy-column">
 <div class="eyebrow"><span class="eyedot"></span> THE NIGHT STARTS BEFORE THEY ARRIVE</div>
 <h1>Don’t just invite them.<br><em>Haunt their curiosity.</em></h1>
+<div class="hero-art hero-art-mobile" aria-label="Animated mobile Halloween invitation preview">
+<div class="hero-haunt" aria-hidden="true"><span class="haunt-moon"></span><span class="haunt-manor"></span><span class="haunt-fog fog-one"></span><span class="haunt-fog fog-two"></span><span class="haunt-fog fog-three"></span><span class="haunt-bat bat-one">🦇</span><span class="haunt-bat bat-two">🦇</span><span class="haunt-bat bat-three">🦇</span><span class="haunt-spark spark-one">✦</span><span class="haunt-spark spark-two">✧</span><span class="haunt-spark spark-three">✦</span><span class="haunt-spark spark-four">✧</span></div><span class="haunt-wraith" aria-hidden="true"></span>
+<div class="glow"></div><div class="float-tag tag-one">🕯️ <b>Not just another invite.</b><br>A tiny haunted experience.</div>
+<article class="invite"><div class="moon"></div><div class="invite-kicker">YOU HAVE BEEN SUMMONED</div><h2>A Night<br>of Haunting</h2><div class="invite-sub">Costumes · Cocktails · Curious things</div><div class="invite-line"></div><div class="invite-details">OCTOBER 31 · 8:00 PM<br>THE OLD MANSION<br>Dress like you belong in a ghost story.</div><div class="invite-rsvp">OPEN IF YOU DARE</div></article>
+<div class="float-tag tag-two">🎃 <b>3 choices.</b><br>One unforgettable reveal.</div>
+</div>
 <p class="hero-copy">Turn your Halloween invitation into a tiny mystery. Guests answer three playful questions, discover their Halloween alter ego, then uncover your party details in an animated reveal. It feels like opening a secret—not another event link.</p>
 <div class="hero-actions"><a class="btn btn-primary" href="#studio">Summon your invitation <span>↗</span></a><a class="btn btn-outline" href="#how">See the experience <span>↓</span></a></div>
 <div class="hero-proof-row"><span><i>✦</i> FREE TO PREVIEW</span><span><i>✦</i> $9.99 ONE-TIME</span><span><i>✦</i> NO SUBSCRIPTION</span></div>
 </div>
-<div class="hero-art" aria-label="Animated Halloween invitation preview">
+<div class="hero-art hero-art-desktop" aria-label="Animated Halloween invitation preview">
 <div class="hero-haunt" aria-hidden="true"><span class="haunt-moon"></span><span class="haunt-manor"></span><span class="haunt-fog fog-one"></span><span class="haunt-fog fog-two"></span><span class="haunt-fog fog-three"></span><span class="haunt-bat bat-one">🦇</span><span class="haunt-bat bat-two">🦇</span><span class="haunt-bat bat-three">🦇</span><span class="haunt-spark spark-one">✦</span><span class="haunt-spark spark-two">✧</span><span class="haunt-spark spark-three">✦</span><span class="haunt-spark spark-four">✧</span></div><span class="haunt-wraith" aria-hidden="true"></span>
 <div class="glow"></div><div class="float-tag tag-one">🕯️ <b>Not just another invite.</b><br>A tiny haunted experience.</div>
 <article class="invite"><div class="moon"></div><div class="invite-kicker">YOU HAVE BEEN SUMMONED</div><h2>A Night<br>of Haunting</h2><div class="invite-sub">Costumes · Cocktails · Curious things</div><div class="invite-line"></div><div class="invite-details">OCTOBER 31 · 8:00 PM<br>THE OLD MANSION<br>Dress like you belong in a ghost story.</div><div class="invite-rsvp">OPEN IF YOU DARE</div></article>
