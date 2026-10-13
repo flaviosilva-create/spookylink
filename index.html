@@ -3,7 +3,13 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#100d19">
-<meta name="description" content="Create an interactive Halloween invitation with a three-question guest journey, personalized reveal, event details, and shareable invitation link.">
+<meta name="description" content="Make Halloween invitations unforgettable. Guests answer three playful questions, discover their Halloween alter ego, and reveal your party details in a spooky interactive experience.">
+<meta property="og:title" content="SpookyLink — An Invitation Worth Opening">
+<meta property="og:description" content="Turn your Halloween invite into a little haunted experience. Three playful questions. A personalized reveal. One unforgettable night.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpookyLink — An Invitation Worth Opening">
+<meta name="twitter:description" content="Turn your Halloween invite into a little haunted experience.">
 <title>SpookyLink — Interactive Halloween Invitations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
@@ -208,27 +214,109 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
 .guest-preview-offer p{font-size:12px;line-height:1.7;color:#c8bdd5;margin:0 0 15px;max-width:620px}
 .guest-preview-offer .btn{width:100%;max-width:320px}
 
+
+/* A more cinematic, animated first impression */
+.hero{position:relative;isolation:isolate}
+.hero:before{content:"";position:absolute;inset:-22px 0 -8px;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 78% 42%,#ff743d16 0%,transparent 34%),radial-gradient(ellipse at 22% 24%,#9c7bff17 0%,transparent 43%),radial-gradient(ellipse at 55% 100%,#381d4b3b 0%,transparent 54%);animation:heroFog 11s ease-in-out infinite}
+.hero-copy-column{position:relative;z-index:1;animation:heroEnter .85s cubic-bezier(.2,.7,.25,1) both}
+.hero-art{isolation:isolate;animation:heroArtEnter 1s .12s cubic-bezier(.2,.7,.25,1) both}
+.hero-haunt{position:absolute;inset:-24px -12px -12px;z-index:-2;overflow:hidden;pointer-events:none}
+.haunt-moon{position:absolute;right:13%;top:3%;width:clamp(76px,10vw,112px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 38% 31%,#fff1d0 0%,#ffc1a0 22%,#ff743d 49%,#8f2748 68%,#24142f 74%);box-shadow:0 0 26px #ff743d40,0 0 74px #ff743d20;opacity:.92;animation:moonEclipse 6s ease-in-out infinite}
+.haunt-manor{position:absolute;bottom:4%;left:50%;width:min(82%,350px);height:39%;transform:translateX(-50%);opacity:.6;background:linear-gradient(180deg,#21162d,#0b0912 83%);clip-path:polygon(0 43%,23% 27%,23% 13%,32% 13%,32% 25%,44% 17%,44% 4%,50% 0,56% 4%,56% 20%,68% 28%,68% 12%,77% 12%,77% 30%,100% 44%,100% 100%,0 100%);filter:drop-shadow(0 -5px 18px #9c7bff16)}
+.haunt-manor:after{content:"";position:absolute;inset:48% 0 0;background:repeating-linear-gradient(90deg,transparent 0 14%,#ff743d2c 14.5% 16%,transparent 16.5% 28%),linear-gradient(180deg,transparent,#080710)}
+.haunt-bat{position:absolute;left:-12%;font-size:23px;filter:drop-shadow(0 0 8px #b79bff45);opacity:0;animation:batFlight 17s linear infinite}
+.bat-one{top:24%;animation-delay:-2s}.bat-two{top:45%;font-size:16px;animation-delay:-9s}.bat-three{top:66%;font-size:20px;animation-delay:-13s}
+.haunt-spark{position:absolute;color:#ffb18a;opacity:.7;text-shadow:0 0 14px #ff743d70;animation:sparkDrift 4s ease-in-out infinite}
+.spark-one{left:15%;top:22%;font-size:22px}.spark-two{right:6%;top:53%;font-size:24px;animation-delay:-1.3s}.spark-three{left:22%;bottom:23%;font-size:17px;animation-delay:-2.2s}.spark-four{right:24%;bottom:15%;font-size:19px;animation-delay:-.7s}
+.hero-art .glow{z-index:-1;background:radial-gradient(circle,#ff743d2c 0%,#9c7bff12 43%,transparent 72%);animation:glowPulse 5.5s ease-in-out infinite;filter:blur(52px)}
+.invite{animation:inviteFloat 7s ease-in-out infinite;box-shadow:0 34px 90px #0009,0 0 48px #ff743d0d;transition:box-shadow .35s,border-color .35s}
+.hero-art:hover .invite{box-shadow:0 38px 100px #000b,0 0 54px #ff743d24;border-color:#ffb18aa8}
+.invite .moon{animation:moonGlow 5s ease-in-out infinite}
+.invite-rsvp{box-shadow:0 0 25px #ff743d24;letter-spacing:.8px}
+.invite:after{content:"";position:absolute;inset:-60% -80%;pointer-events:none;background:linear-gradient(115deg,transparent 43%,#ffffff0b 49%,#ffffff18 50%,transparent 56%);transform:translateX(-34%) rotate(4deg);animation:cardGlimmer 8s ease-in-out infinite}
+.float-tag{backdrop-filter:blur(12px);border-color:#b79bff2e;box-shadow:0 18px 45px #0007,0 0 24px #9c7bff09}
+.tag-one{animation:tagFloatOne 6s ease-in-out infinite}
+.tag-two{animation:tagFloatTwo 7s ease-in-out infinite}
+.hero .eyebrow{color:#ffbd94}
+.hero .eyedot{background:var(--orange);box-shadow:0 0 14px var(--orange);animation:dotPulse 2s ease-in-out infinite}
+.hero h1{font-size:clamp(44px,6vw,72px);text-wrap:balance}
+.hero h1 em{background:linear-gradient(105deg,#ff7844 8%,#ffb27e 52%,#c39aff 100%);background-clip:text;-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 18px #ff743d16)}
+.hero-copy{max-width:510px}
+.hero .btn-primary,.navcta,.price-card .plan-btn{background:linear-gradient(105deg,#ff743d 0%,#ff9756 56%,#ffb66c 100%);color:#241126;box-shadow:0 8px 26px #ff743d20,0 0 0 1px #ffc18d28 inset}
+.hero .btn-primary{min-height:51px;padding:14px 22px;animation:ctaEmber 4s ease-in-out infinite}
+.hero .btn-primary:hover,.navcta:hover,.price-card .plan-btn:hover{transform:translateY(-3px);box-shadow:0 12px 36px #ff743d35,0 0 30px #ff743d20}
+.hero .btn-outline{border-color:#9e83b84f;background:linear-gradient(110deg,#ffffff08,#9c7bff0b);backdrop-filter:blur(8px)}
+.hero .btn-outline:hover{border-color:#ffb18a;color:#ffcfaf;transform:translateY(-2px)}
+.hero-actions{margin-top:31px}
+.hero-proof-row{display:flex;gap:13px 19px;flex-wrap:wrap;margin-top:24px;color:#a99bb7;font-size:10px;font-weight:800;letter-spacing:1px}
+.hero-proof-row span{display:inline-flex;align-items:center;gap:6px}
+.hero-proof-row i{font-style:normal;color:var(--lime);text-shadow:0 0 12px #d6f36a35}
+.navcta{transition:transform .2s,box-shadow .2s}
+.step{transition:transform .28s,border-color .28s,box-shadow .28s}
+.step:hover{transform:translateY(-5px);border-color:#9c7bff55;box-shadow:0 18px 42px #0003}
+.price-card.featured{box-shadow:0 20px 65px #0003,0 0 40px #ff743d0b;animation:priceGlow 6s ease-in-out infinite}
+.price-card .plan-btn{transition:transform .2s,box-shadow .2s}
+@keyframes heroFog{0%,100%{opacity:.72;transform:translate3d(0,0,0) scale(1)}50%{opacity:1;transform:translate3d(0,6px,0) scale(1.025)}}
+@keyframes heroEnter{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroArtEnter{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes moonEclipse{0%,100%{transform:translateY(0) scale(1);filter:saturate(.9);box-shadow:0 0 26px #ff743d40,0 0 74px #ff743d20}50%{transform:translateY(7px) scale(1.04);filter:saturate(1.2);box-shadow:0 0 36px #ff743d5e,0 0 94px #ff743d27}}
+@keyframes batFlight{0%{transform:translateX(0) translateY(0) rotate(-4deg);opacity:0}8%{opacity:.72}45%{transform:translateX(310px) translateY(-22px) rotate(5deg);opacity:.64}88%{opacity:.48}100%{transform:translateX(650px) translateY(13px) rotate(-4deg);opacity:0}}
+@keyframes sparkDrift{0%,100%{transform:translateY(0) rotate(0) scale(.88);opacity:.36}50%{transform:translateY(-11px) rotate(22deg) scale(1.12);opacity:.9}}
+@keyframes glowPulse{0%,100%{opacity:.65;transform:scale(.94)}50%{opacity:1;transform:scale(1.1)}}
+@keyframes inviteFloat{0%,100%{transform:translateY(0) rotate(2deg)}50%{transform:translateY(-10px) rotate(-1deg)}}
+@keyframes moonGlow{0%,100%{box-shadow:0 0 34px #ffe5a544}50%{box-shadow:0 0 54px #ffe5a580,0 0 82px #ff743d20}}
+@keyframes cardGlimmer{0%,58%{transform:translateX(-45%) rotate(4deg);opacity:0}68%{opacity:1}82%,100%{transform:translateX(45%) rotate(4deg);opacity:0}}
+@keyframes tagFloatOne{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-8px) rotate(-2deg)}}
+@keyframes tagFloatTwo{0%,100%{transform:translateY(0) rotate(4deg)}50%{transform:translateY(7px) rotate(1deg)}}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 8px var(--orange)}50%{box-shadow:0 0 19px var(--orange)}}
+@keyframes ctaEmber{0%,100%{box-shadow:0 8px 26px #ff743d20,0 0 0 1px #ffc18d28 inset}50%{box-shadow:0 9px 31px #ff743d30,0 0 0 1px #ffc18d48 inset}}
+@keyframes priceGlow{0%,100%{box-shadow:0 20px 65px #0003,0 0 32px #ff743d08}50%{box-shadow:0 22px 70px #0004,0 0 42px #ff743d13}}
+@media(max-width:800px){
+ .hero:before{inset:-10px 0 0}
+ .hero-art{margin-top:3px}
+ .hero-proof-row{gap:10px 14px;font-size:9px}
+ .haunt-moon{right:9%;top:2%}
+ .haunt-manor{width:92%;height:35%;bottom:4%}
+ .haunt-bat{font-size:19px}
+ .hero .btn-primary{min-height:49px}
+}
+@media(max-width:430px){
+ .hero h1{font-size:clamp(40px,11vw,48px);letter-spacing:-1.7px}
+ .hero-copy{font-size:15px;line-height:1.75}
+ .hero-proof-row{gap:9px 12px;letter-spacing:.55px}
+ .hero-art{min-height:385px}
+ .invite{width:min(330px,87%);min-height:350px}
+ .tag-one{left:-2px;top:42px}
+ .tag-two{right:-2px;bottom:31px}
+ .haunt-manor{height:31%}
+}
+@media(prefers-reduced-motion:reduce){
+ .hero:before,.hero-copy-column,.hero-art,.haunt-moon,.haunt-bat,.haunt-spark,.hero-art .glow,.invite,.invite .moon,.invite:after,.tag-one,.tag-two,.hero .eyedot,.hero .btn-primary,.price-card.featured{animation:none!important}
+ .step,.hero .btn-primary,.navcta,.price-card .plan-btn{transition:none!important}
+}
+
 </style>
 </head>
 <body>
 <header class="wrap nav">
 <a class="brand" href="#" aria-label="SpookyLink home"><span class="brandmark">✦</span> spooky<span style="color:var(--orange);margin-left:-10px">link</span></a>
 <nav class="navlinks"><a href="#how">How it works</a><a href="#studio">Invitation studio</a><a href="#pricing">Pricing</a></nav>
-<a class="navcta" href="#studio">Create an invite ↗</a>
+<a class="navcta" href="#studio">Create your invite ↗</a>
 </header>
 <main>
 <section class="wrap hero">
-<div>
-<div class="eyebrow"><span class="eyedot"></span> Your Halloween, but make it spooky</div>
-<h1>Don’t just invite them.<br><em>Make an entrance.</em></h1>
-<p class="hero-copy">Halloween invitations that become a little experience. Guests answer three playful questions, discover their Halloween alter ego, and then uncover the party details in a cinematic reveal.</p>
-<div class="hero-actions"><a class="btn btn-primary" href="#studio">Create the experience <span>↗</span></a><a class="btn btn-outline" href="#how">See how it works <span>↓</span></a></div>
-<p class="micro">✦ An interactive guest journey · A reveal worth opening · Made for phones</p>
+<div class="hero-copy-column">
+<div class="eyebrow"><span class="eyedot"></span> THE NIGHT STARTS BEFORE THEY ARRIVE</div>
+<h1>Don’t just invite them.<br><em>Haunt their curiosity.</em></h1>
+<p class="hero-copy">Turn your Halloween invitation into a tiny mystery. Guests answer three playful questions, discover their Halloween alter ego, then uncover your party details in an animated reveal. It feels like opening a secret—not another event link.</p>
+<div class="hero-actions"><a class="btn btn-primary" href="#studio">Summon your invitation <span>↗</span></a><a class="btn btn-outline" href="#how">See the experience <span>↓</span></a></div>
+<div class="hero-proof-row"><span><i>✦</i> FREE TO PREVIEW</span><span><i>✦</i> $9.99 ONE-TIME</span><span><i>✦</i> NO SUBSCRIPTION</span></div>
 </div>
-<div class="hero-art" aria-label="Halloween invitation preview">
-<div class="glow"></div><div class="float-tag tag-one">🕯️ <b>One spooky design.</b><br>Endless atmosphere.</div>
-<article class="invite"><div class="moon"></div><div class="invite-kicker">YOU'RE INVITED TO</div><h2>A Night<br>of Haunting</h2><div class="invite-sub">Costumes · Cocktails · Curious things</div><div class="invite-line"></div><div class="invite-details">OCTOBER 31 · 8:00 PM<br>THE OLD MANSION<br>Dress like you belong in a ghost story.</div><div class="invite-rsvp">SAVE THE DATE</div></article>
-<div class="float-tag tag-two">🎃 <b>Made in minutes</b><br>Shared in seconds</div>
+<div class="hero-art" aria-label="Animated Halloween invitation preview">
+<div class="hero-haunt" aria-hidden="true"><span class="haunt-moon"></span><span class="haunt-manor"></span><span class="haunt-bat bat-one">🦇</span><span class="haunt-bat bat-two">🦇</span><span class="haunt-bat bat-three">🦇</span><span class="haunt-spark spark-one">✦</span><span class="haunt-spark spark-two">✧</span><span class="haunt-spark spark-three">✦</span><span class="haunt-spark spark-four">✧</span></div>
+<div class="glow"></div><div class="float-tag tag-one">🕯️ <b>Not just another invite.</b><br>A tiny haunted experience.</div>
+<article class="invite"><div class="moon"></div><div class="invite-kicker">YOU HAVE BEEN SUMMONED</div><h2>A Night<br>of Haunting</h2><div class="invite-sub">Costumes · Cocktails · Curious things</div><div class="invite-line"></div><div class="invite-details">OCTOBER 31 · 8:00 PM<br>THE OLD MANSION<br>Dress like you belong in a ghost story.</div><div class="invite-rsvp">OPEN IF YOU DARE</div></article>
+<div class="float-tag tag-two">🎃 <b>3 choices.</b><br>One unforgettable reveal.</div>
 </div>
 </section>
 <section class="section" id="how"><div class="wrap"><div class="section-head"><div class="eyebrow">A better kind of invitation</div><h2>From a little mystery to a memorable invite.</h2><p>No design skills. No complicated setup. Just one easy invitation with a memorable reveal.</p></div>
