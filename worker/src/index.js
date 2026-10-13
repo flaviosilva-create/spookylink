@@ -5,9 +5,7 @@
 const SITE_ORIGIN = "https://flaviosilva-create.github.io";
 const SITE_URL = SITE_ORIGIN + "/spookylink/";
 const PLANS = {
-  invitation: { amount: 999, name: "SpookyLink Invitation", description: "Personalized Halloween invitation with high-resolution PNG download.", products: ["invitation"] },
-  mystery: { amount: 499, name: "Haunted Mystery", description: "The interactive Midnight Cipher browser game.", products: ["mystery"] },
-  bundle: { amount: 1299, name: "Full Experience Bundle", description: "SpookyLink Invitation plus the Haunted Mystery game.", products: ["invitation", "mystery"] }
+  invitation: { amount: 999, name: "SpookyLink Invitation", description: "Personalized Halloween invitation with high-resolution PNG download.", products: ["invitation"] }
 };
 const json = (data, status = 200, origin = SITE_ORIGIN) => new Response(JSON.stringify(data), {
   status,
