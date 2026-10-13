@@ -1,60 +1,38 @@
-# Cloudflare Worker: Paddle verification
+# SpookyLink Stripe Checkout Worker
 
-This Worker verifies completed Paddle transactions using Paddle's server-side API. The Paddle API key remains in Cloudflare's encrypted secret storage; it must never be placed in `index.html` or `paddle-config.js`.
+This Cloudflare Worker creates Stripe Checkout Sessions for SpookyLink and verifies completed purchases. The Stripe secret key must remain in Cloudflare encrypted secrets; never place it in GitHub Pages or a public JavaScript file.
 
-## Deploy using the Cloudflare dashboard (no local tooling required)
+## Deploy the Worker
 
-1. Sign in to your Cloudflare account and open **Workers & Pages**.
-2. Choose **Create** → **Create Worker**, name it `spookylink-paddle-verification`, then deploy the initial Worker.
-3. Open the Worker editor and replace its sample code with the full content from `worker/src/index.js` in this repository. Save and deploy.
-4. Open **Settings → Variables and Secrets** and configure these variables:
-   - `PADDLE_ENVIRONMENT`: `sandbox` while testing; use `production` only after Paddle approves you.
-   - `ALLOWED_ORIGIN`: `https://flaviosilva-create.github.io` (origin only; do not append `/spookylink/`).
-   - `PRICE_INVITATION`: `pri_01m4pqtch149zj705rjf905w4a` for the supplied Sandbox Invitation price.
-   - `PRICE_MYSTERY`: `pri_01m4pr24c4knzg7kkpda30w7as` for the supplied Sandbox Haunted Mystery price.
-   - `PRICE_BUNDLE`: `pri_01m4pr5t96cjej61jve8mj0bn7` for the supplied Sandbox bundle price.
+1. In Cloudflare, open **Workers & Pages** and create a Worker named `spookylink-stripe-checkout`.
+2. Deploy a basic Worker, then open its editor and replace the code with `worker/src/index.js` from this repository. Save and deploy.
+3. In **Settings → Variables and Secrets**, add the plain variable `STRIPE_MODE=test`.
+4. Add `STRIPE_SECRET_KEY` as an **encrypted secret**, using the test secret key from the SpookyLink Stripe account (starts with `sk_test_`). Do not send it in this chat or commit it to GitHub.
+5. Deploy again and copy the Worker URL.
+6. In `stripe-config.js`, replace `https://REPLACE-WITH-SPOOKYLINK-WORKER-URL` with the exact Worker base URL, then commit the file to GitHub.
+7. Open `https://YOUR-WORKER-URL/api/health`. It should return JSON with `ok: true` and `service: spookylink-stripe-checkout`.
 
-Confirm the mapping matches each price in your Paddle catalog before testing. Use separate live price IDs after approval.
-5. Add `PADDLE_API_KEY` as an **encrypted secret**, not a plain variable. For sandbox, use a sandbox API key with the read permission needed for transactions. Do not paste it into GitHub or this README.
-6. Deploy again and copy the Worker URL, for example `https://spookylink-paddle-verification.YOUR-SUBDOMAIN.workers.dev`.
-7. Open `paddle-config.js` in GitHub and set `apiBaseUrl` to that exact Worker base URL. Do not append `/api/verify-transaction`; the frontend appends the endpoint path.
-8. Open `https://YOUR-WORKER-URL/api/health`. A correctly deployed Worker responds with JSON showing `ok: true`.
-9. Keep the Paddle environment, API key, and all three price IDs within the same mode (sandbox with sandbox; production with live).
+## Configure the webhook
 
-## Run the Worker tests
+In the Stripe Dashboard for **SpookyLink**, in **test mode**, create a webhook endpoint:
+`https://YOUR-WORKER-URL/api/stripe-webhook`
 
-With Node.js 18 or newer installed, from this `worker` directory run:
+Subscribe to:
+- `checkout.session.completed`
+- `checkout.session.async_payment_succeeded`
 
-```bash
-npm test
-```
+Copy the endpoint's signing secret (starts with `whsec_`) into the Cloudflare Worker as the encrypted secret `STRIPE_WEBHOOK_SECRET`, then deploy again. Never publish that secret.
 
-The tests use Node's built-in test runner and mock Paddle API responses, so they do not require real Paddle credentials or make real API calls.
+## Test the checkout
 
-## How verification works
+1. Confirm the Stripe Dashboard is in test mode.
+2. Open the SpookyLink site and accept the Terms & Conditions / Refund Policy checkbox.
+3. Test each product: Invitation $9.99 USD, Haunted Mystery $4.99 USD, and Full Experience Bundle $12.99 USD.
+4. Use a Stripe test card such as `4242 4242 4242 4242`, any future expiry date, any CVC, and a valid test postal code.
+5. Verify that checkout returns to SpookyLink and that the correct paid features unlock. Also test cancel/back, a failed test card, a malformed session ID, and a session that has not been paid.
 
-After Paddle emits `checkout.completed`, the browser reads the related transaction ID and sends it to `POST /api/verify-transaction`. The Worker calls Paddle's transaction API from the server, requires a `completed` transaction, and only returns entitlement keys if the transaction contains one of the three configured SpookyLink price IDs. On page load, saved transaction references are rechecked with the server before paid features unlock.
+The Worker sets the product and price server-side based on a fixed allowlist. It does not trust a client-supplied amount or product name. It uses Stripe's hosted Checkout and dynamically available payment methods.
 
-This avoids trusting a client-side "payment succeeded" flag alone. Do not remove the server verification step or add a local-only unlock fallback for real sales.
+## Before live payments
 
-## Test mode
-
-- Use a sandbox client-side token beginning with `test_` in `paddle-config.js`.
-- Use the three sandbox price IDs in both `paddle-config.js` and Worker variables.
-- Set Worker `PADDLE_ENVIRONMENT=sandbox` and use a sandbox API key as the encrypted `PADDLE_API_KEY` secret.
-- Set Paddle's sandbox default payment link to the website URL. Paddle's docs explain this setting and list the sandbox test card.
-- Buy each of the three products with a sandbox transaction, confirm the Worker returns the expected products, reload the page, and verify the unlock remains valid only after server verification.
-- Test an invalid transaction ID and a non-completed transaction; neither should unlock anything.
-
-## Production
-
-Do not accept real payments until Paddle has approved your account/domain. Create a live client-side token and live product price IDs, update Worker secrets/variables to the production API, set `environment: "production"` and `apiBaseUrl` in `paddle-config.js`, deploy, and test carefully.
-
-## Limitations and next hardening steps
-
-The Worker checks live transaction status and configured product price IDs, but this first deployment template does not persist a durable user account or implement a full webhook-driven revocation ledger. Local storage merely remembers transaction IDs; it is not the authority. For a larger sales volume, add verified Paddle webhooks for completed transactions and approved refunds, store entitlements idempotently in a database, provide a customer restore/purchase support process, and monitor the Worker/API rate limits.
-
-Official docs:
-- https://developer.paddle.com/api-reference/transactions/get-transaction/
-- https://developer.paddle.com/paddle-js/events/checkout-completed/
-- https://developer.paddle.com/build/transactions/default-payment-link/
+Do not switch to production until the test checkout and unlock/restore behavior have been tested. In production, use the live account's live secret key and a separate live webhook signing secret; keep the site config and Worker in the same mode. Complete Stripe's onboarding using accurate personal/business details for your actual situation.
