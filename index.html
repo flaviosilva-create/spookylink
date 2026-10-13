@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#100d19">
-<meta name="description" content="Design a personalized Halloween invitation, download the artwork, and unlock a browser-based mystery game with SpookyLink.">
-<title>SpookyLink — Halloween invitations with a little mystery</title>
+<meta name="description" content="Create an interactive Halloween invitation with a three-question guest journey, personalized reveal, event details, and shareable invitation link.">
+<title>SpookyLink — Interactive Halloween Invitations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -177,6 +177,10 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
 @media(max-width:650px){.guest-intro{min-height:590px;padding-top:35px}.guest-question-panel{min-height:0}.guest-progress-track{margin:16px 0 30px}.guest-choices{grid-template-columns:1fr;gap:9px}.guest-choice{min-height:0;display:grid;grid-template-columns:35px 1fr;column-gap:12px;row-gap:3px;padding:13px}.guest-choice-icon{grid-row:span 2;align-self:center;font-size:23px}.guest-choice-title,.guest-choice-copy{padding-right:12px}.guest-choice-check{right:10px;top:calc(50% - 9px)}.guest-question-footer{align-items:flex-start}.guest-question-footer>span{max-width:130px;line-height:1.5}.guest-detail-grid{grid-template-columns:1fr}.guest-result{align-items:flex-start}.guest-letter-card h2{font-size:clamp(31px,9vw,45px)}.guest-reveal-actions{display:grid;grid-template-columns:1fr;width:100%}.guest-reveal-actions .btn{width:100%}.guest-reveal-top{margin-bottom:16px}}
 @media(prefers-reduced-motion:reduce){.guest-stars span,.guest-letter-peek{animation:none;transition:none}.guest-choice{transition:none}}
 
+
+.guest-preview-launch{width:100%;margin-top:13px;padding:12px 14px;font-size:12px;border-color:#73576e;background:linear-gradient(95deg,#ff743d10,#9c7bff12)}
+.guest-preview-launch:hover{border-color:#ffb18a;background:#ff743d18}
+
 </style>
 </head>
 <body>
@@ -189,9 +193,9 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
 <section class="wrap hero">
 <div>
 <div class="eyebrow"><span class="eyedot"></span> Your Halloween, but make it spooky</div>
-<h1>Set the scene.<br>Send a little <em>mystery.</em></h1>
+<h1>Don’t just invite them.<br><em>Make an entrance.</em></h1>
 <p class="hero-copy">Halloween invitations that feel like the start of a story. Create your design, then invite your guests into The Hollow Bell—a six-chapter mystery with a coded letter, a hidden key, and a final reveal.</p>
-<div class="hero-actions"><a class="btn btn-primary" href="#studio">Make your invitation <span>↗</span></a><a class="btn btn-outline" href="#mystery">Discover the mystery <span>↓</span></a></div>
+<div class="hero-actions"><a class="btn btn-primary" href="#studio">Create the experience <span>↗</span></a><a class="btn btn-outline" href="#mystery">Discover the mystery <span>↓</span></a></div>
 <p class="micro">✦ An interactive guest journey · A reveal worth opening · Made for phones</p>
 </div>
 <div class="hero-art" aria-label="Halloween invitation preview">
@@ -200,7 +204,7 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
 <div class="float-tag tag-two">🎃 <b>Made in minutes</b><br>Shared in seconds</div>
 </div>
 </section>
-<section class="section" id="how"><div class="wrap"><div class="section-head"><div class="eyebrow">Simple as a spell</div><h2>From a little mystery to a memorable invite.</h2><p>No design skills. No complicated setup. Just a Halloween invite with a little extra magic.</p></div>
+<section class="section" id="how"><div class="wrap"><div class="section-head"><div class="eyebrow">A better kind of invitation</div><h2>From a little mystery to a memorable invite.</h2><p>No design skills. No complicated setup. Just a Halloween invite with a little extra magic.</p></div>
 <div class="steps"><article class="step"><div class="step-num">01</div><h3>Make it yours</h3><p>Personalize the party details, host name, date, and message. Your invitation card updates as you create.</p></article><article class="step"><div class="step-num">02</div><h3>Set the mood</h3><p>Choose a visual mood, then let guests answer three playful questions before the invitation is revealed.</p></article><article class="step"><div class="step-num">03</div><h3>Share your invite</h3><p>Unlock your shareable invitation experience and a high-resolution keepsake image. Guests play through a short intro before the event details appear.</p></article></div>
 </div></section>
 <section class="section builder-section" id="studio"><div class="wrap"><div class="section-head"><div class="eyebrow">The invitation studio</div><h2>Your party. Your kind of spooky.</h2><p>Fill in the details and customize your invitation preview in real time.</p></div>
@@ -215,6 +219,7 @@ body.shared-invite-mode #studio .section-head{display:none}body.shared-invite-mo
 </div>
 <div class="preview-card"><div class="preview-top"><h3>Live preview</h3><span class="live"><span class="eyedot"></span> Live</span></div>
 <div class="preview-invite" id="previewInvite"><div class="moon"></div><div class="invite-kicker">YOU'RE INVITED TO</div><h2 id="outEvent">A Night of Haunting</h2><div class="invite-sub" id="outHost">HOSTED BY YOUR FAVORITE HOST</div><div class="invite-line"></div><div class="preview-message" id="outMessage">Costumes, spooky treats, and curious things. Come dressed like you belong in a ghost story.</div><div class="preview-details"><span id="outDate">SATURDAY, OCTOBER 31, 2026</span><br><span id="outTime">8:00 PM</span><br><span id="outLocation">THE OLD MANSION</span></div><div class="preview-rsvp" aria-hidden="true">SAVE THE DATE</div></div>
+<button class="btn btn-outline guest-preview-launch" id="previewExperience" type="button">Try the guest experience ↗</button>
 <div class="preview-actions"><button class="btn btn-outline" id="copyLink" type="button">Unlock guest link</button><button class="btn btn-outline" id="copyDetails" type="button">Copy text</button><button class="btn btn-outline" id="shareInvite" type="button">Share experience ↗</button></div><p class="note">Your invitation link includes the event details so guests can view them. Share it only with intended guests; answers to the playful questions are not stored.</p>
 </div></div></div></section>
 <section class="section" id="mystery"><div class="wrap"><div class="mystery">
@@ -405,6 +410,7 @@ function downloadGuestCalendar(){
  const url=URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='spookylink-invitation.ics';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast('Calendar file ready to add to your calendar.');
 }
 
+$('previewExperience').addEventListener('click',()=>{const url=makeInviteUrl();window.open(url,'_blank','noopener,noreferrer');});
 $('copyDetails').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(inviteText());showToast('Invitation text copied!')}catch(e){fallbackCopy(inviteText())}});
 function fallbackCopy(t,message){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');showToast(message||'Copied to clipboard!')}catch(e){showToast('Copy not available. Select and copy the text manually.')}a.remove()}
 $('copyLink').addEventListener('click',async()=>{if(!hasEntitlement('invitation')){startCheckout('invitation');return;}const url=makeInviteUrl();try{await navigator.clipboard.writeText(url);showToast('Interactive invitation link copied!');}catch(e){fallbackCopy(url,'Interactive invitation link copied!');}});
